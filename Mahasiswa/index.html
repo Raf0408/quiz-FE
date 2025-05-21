@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1, width=device-width" />
+
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+    />
+
+    <style>
+      body {
+        margin: 0;
+        line-height: normal;
+      }
+
+      .frame-child {
+        width: 50px;
+        position: relative;
+        border-radius: 50%;
+        max-height: 100%;
+        object-fit: cover;
+      }
+      .alex-murphy {
+        align-self: stretch;
+        position: relative;
+        font-weight: 600;
+      }
+      .examplegmailcom {
+        align-self: stretch;
+        position: relative;
+        font-size: 11px;
+        font-weight: 300;
+      }
+      .alex-murphy-parent {
+        width: 117px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+      .ellipse-parent {
+        position: absolute;
+        top: 973px;
+        left: 28px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 11px;
+        font-size: 15px;
+      }
+      .icon {
+        width: 18px;
+        position: relative;
+        height: 20px;
+      }
+      .logout {
+        position: relative;
+        font-weight: 600;
+      }
+      .icon-parent {
+        position: absolute;
+        top: 1061px;
+        left: 28px;
+        border-radius: 5px;
+        background-color: #f1f4f5;
+        width: 178px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 6px;
+        box-sizing: border-box;
+        gap: 20px;
+        cursor: pointer;
+        font-size: 13px;
+        color: #1d2d44;
+      }
+      .sidebar-client-child {
+        position: absolute;
+        top: 936px;
+        left: 30px;
+        max-height: 100%;
+        width: 176px;
+      }
+      .quizku {
+        position: relative;
+      }
+      .icon1 {
+        width: 24px;
+        position: relative;
+        max-height: 100%;
+        object-fit: contain;
+      }
+      .quizku-parent {
+        position: absolute;
+        top: 30px;
+        left: 33px;
+        width: 159px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0px;
+        font-size: 24px;
+      }
+      .matakuliah {
+        width: 95px;
+        position: relative;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      .icon-group {
+        position: absolute;
+        top: 129px;
+        left: 33px;
+        border-radius: 5px;
+        background-color: #f1f4f5;
+        width: 180px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 5px 23px 5px 15px;
+        box-sizing: border-box;
+        gap: 15px;
+        color: #1d2d44;
+      }
+      .icon-container {
+        position: absolute;
+        top: 188px;
+        left: 33px;
+        border-radius: 5px;
+        width: 180px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 5px 23px 5px 15px;
+        box-sizing: border-box;
+        gap: 15px;
+      }
+      .solarsettings-outline-icon {
+        width: 24px;
+        position: relative;
+        max-height: 100%;
+      }
+      .pengaturan {
+        width: 105px;
+        position: relative;
+        display: inline-block;
+        flex-shrink: 0;
+      }
+      .solarsettings-outline-parent {
+        position: absolute;
+        top: 247px;
+        left: 33px;
+        border-radius: 5px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 5px 23px 5px 15px;
+        gap: 15px;
+        cursor: pointer;
+      }
+      .sidebar-client {
+        width: 235px;
+        position: relative;
+        background-color: #1d2d44;
+        height: 1117px;
+        overflow: hidden;
+        flex-shrink: 0;
+      }
+      .daftar-mata-kuliah {
+        width: 404px;
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 40px;
+        flex-shrink: 0;
+      }
+      .create-and-manage {
+        width: 585px;
+        position: relative;
+        font-size: 15px;
+        display: inline-block;
+      }
+      .daftar-mata-kuliah-parent {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        gap: 10px;
+      }
+      .mynauisearch-icon {
+        position: absolute;
+        width: 8.63%;
+        top: 8px;
+        right: 87.77%;
+        left: 3.6%;
+        max-width: 100%;
+        overflow: hidden;
+        height: 24px;
+      }
+      .search {
+        position: absolute;
+        height: 45%;
+        width: 23.38%;
+        top: 27.52%;
+        left: 14.03%;
+        letter-spacing: 0.1em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .search-bar {
+        width: 278px;
+        position: relative;
+        box-shadow: 14px 16px 6px rgba(0, 0, 0, 0.01),
+          9px 10px 6px rgba(0, 0, 0, 0.05), 5px 6px 5px rgba(0, 0, 0, 0.16),
+          2px 3px 3px rgba(0, 0, 0, 0.27), 1px 1px 2px rgba(0, 0, 0, 0.32);
+        border-radius: 12px;
+        background-color: #f1f4f5;
+        border: 2px solid #1d2d44;
+        box-sizing: border-box;
+        height: 40px;
+        overflow: hidden;
+        flex-shrink: 0;
+        text-align: center;
+        font-size: 14px;
+      }
+      .frame-group {
+        align-self: stretch;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 27px;
+      }
+      .semester-6 {
+        position: relative;
+        font-size: 13px;
+        display: none;
+      }
+      .layanan-web-parent {
+        width: 170px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 5px;
+      }
+      .quiz-1-inner {
+        width: 270px;
+        height: 312px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+      .quiz-1 {
+        flex: 1;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #e761a8;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+        color: #f4f5f9;
+      }
+      .rekayasa-perangkat-lunak {
+        width: 272px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .quiz-2 {
+        flex: 1;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #9c6cf4;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+      }
+      .sistem-pendukung-keputusan {
+        width: 285px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .quiz-3 {
+        flex: 1;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #f8b24f;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+      }
+      .quiz-4 {
+        flex: 1;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #54df21;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+      }
+      .quiz-1-parent {
+        align-self: stretch;
+        height: 370px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 10px;
+        box-sizing: border-box;
+        gap: 30px;
+      }
+      .quiz-11 {
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #e761a8;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+        color: #f4f5f9;
+      }
+      .rekayasa-perangkat-lunak1 {
+        width: 277px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .semester-65 {
+        position: relative;
+        font-size: 13px;
+      }
+      .quiz-21 {
+        width: 330.7px;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #9c6cf4;
+        overflow: hidden;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .pemrograman-internet {
+        width: 271px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .quiz-31 {
+        width: 330.7px;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #f8b24f;
+        overflow: hidden;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .quiz-41 {
+        width: 330.7px;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #54df21;
+        overflow: hidden;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .frame-container {
+        align-self: stretch;
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 25px;
+        font-size: 24px;
+        color: #fff;
+      }
+      .frame-parent {
+        align-self: stretch;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 25px;
+      }
+      .client-homepage-inner {
+        align-self: stretch;
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 25px 30px;
+        font-size: 40px;
+        color: #1d2d44;
+      }
+      .client-homepage {
+        width: 100%;
+        position: relative;
+        background-color: #f1f4f5;
+        height: 1117px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1px;
+        text-align: left;
+        font-size: 16px;
+        color: #f1f4f5;
+        font-family: Poppins;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="client-homepage">
+      <div class="sidebar-client">
+        <div class="ellipse-parent">
+          <img class="frame-child" alt="" src="Ellipse 7.png" />
+
+          <div class="alex-murphy-parent">
+            <div class="alex-murphy">Alex Murphy</div>
+            <div class="examplegmailcom">example@gmail.com</div>
+          </div>
+        </div>
+        <div class="icon-parent" id="frameContainer1">
+          <img class="icon" alt="" src="Icon.svg" />
+
+          <div class="logout">Logout</div>
+        </div>
+        <img class="sidebar-client-child" alt="" src="Line 5.svg" />
+
+        <div class="quizku-parent">
+          <b class="quizku">Quizku.</b>
+          <img class="icon1" alt="" src="Icon.svg" />
+        </div>
+        <div class="icon-group">
+          <img class="solarsettings-outline-icon" alt="" src="Icon.svg" />
+
+          <b class="matakuliah">Matakuliah</b>
+        </div>
+        <div class="icon-container">
+          <img class="solarsettings-outline-icon" alt="" src="Icon.svg" />
+
+          <b class="matakuliah">Hasil kuis</b>
+        </div>
+        <div class="solarsettings-outline-parent" id="frameContainer5">
+          <img
+            class="solarsettings-outline-icon"
+            alt=""
+            src="solar:settings-outline.svg"
+          />
+
+          <b class="pengaturan">Pengaturan</b>
+        </div>
+      </div>
+      <div class="client-homepage-inner">
+        <div class="frame-parent">
+          <div class="frame-group">
+            <div class="daftar-mata-kuliah-parent">
+              <b class="daftar-mata-kuliah">Daftar Mata Kuliah</b>
+              <div class="create-and-manage">
+                Create and manage user accounts for students, lecturers, and
+                administrators.
+              </div>
+            </div>
+            <div class="search-bar">
+              <img class="mynauisearch-icon" alt="" src="mynaui:search.svg" />
+
+              <div class="search">Search</div>
+            </div>
+          </div>
+          <div class="frame-container">
+            <div class="quiz-1-parent">
+              <div class="quiz-1" id="qUIZ1Container">
+                <div class="quiz-1-inner">
+                  <div class="layanan-web-parent">
+                    <b class="quizku">Layanan Web</b>
+                    <div class="semester-6">Semester 6</div>
+                  </div>
+                </div>
+              </div>
+              <div class="quiz-2" id="qUIZ2Container">
+                <div class="quiz-1-inner">
+                  <div class="layanan-web-parent">
+                    <b class="rekayasa-perangkat-lunak"
+                      >Rekayasa Perangkat Lunak</b
+                    >
+                    <div class="semester-6">Semester 6</div>
+                  </div>
+                </div>
+              </div>
+              <div class="quiz-3" id="qUIZ3Container">
+                <div class="quiz-1-inner">
+                  <div class="layanan-web-parent">
+                    <b class="sistem-pendukung-keputusan"
+                      >Sistem Pendukung Keputusan</b
+                    >
+                    <div class="semester-6">Semester 6</div>
+                  </div>
+                </div>
+              </div>
+              <div class="quiz-4" id="qUIZ4Container">
+                <div class="quiz-1-inner">
+                  <div class="layanan-web-parent">
+                    <b class="quizku">Metodologi Penelitian</b>
+                    <div class="semester-6">Semester 6</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="quiz-1-parent">
+              <div class="quiz-11" id="qUIZ1Container">
+                <div class="quiz-1-inner">
+                  <div class="layanan-web-parent">
+                    <b class="quizku">Rekayasa Sistem</b>
+                    <div class="semester-6">Semester 6</div>
+                  </div>
+                </div>
+              </div>
+              <div class="quiz-21" id="qUIZ2Container">
+                <div class="quiz-1-inner">
+                  <div class="layanan-web-parent">
+                    <b class="rekayasa-perangkat-lunak1"
+                      >Rekayasa Perangkat Lunak</b
+                    >
+                    <div class="semester-65">Semester 6</div>
+                  </div>
+                </div>
+              </div>
+              <div class="quiz-31" id="qUIZ3Container">
+                <div class="quiz-1-inner">
+                  <div class="layanan-web-parent">
+                    <b class="pemrograman-internet">Pemrograman Internet</b>
+                    <div class="semester-65">Semester 6</div>
+                  </div>
+                </div>
+              </div>
+              <div class="quiz-41" id="qUIZ4Container">
+                <div class="quiz-1-inner">
+                  <div class="layanan-web-parent">
+                    <b class="quizku">Kecerdasan Buatan</b>
+                    <div class="semester-65">Semester 6</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      var frameContainer1 = document.getElementById("frameContainer1");
+      if (frameContainer1) {
+        frameContainer1.addEventListener("click", function (e) {
+          // Add your code here
+        });
+      }
+
+      var frameContainer5 = document.getElementById("frameContainer5");
+      if (frameContainer5) {
+        frameContainer5.addEventListener("click", function (e) {
+          // Add your code here
+        });
+      }
+
+      var qUIZ1Container = document.getElementById("qUIZ1Container");
+      if (qUIZ1Container) {
+        qUIZ1Container.addEventListener("click", function (e) {
+          // Add your code here
+        });
+      }
+
+      var qUIZ2Container = document.getElementById("qUIZ2Container");
+      if (qUIZ2Container) {
+        qUIZ2Container.addEventListener("click", function (e) {
+          // Add your code here
+        });
+      }
+
+      var qUIZ3Container = document.getElementById("qUIZ3Container");
+      if (qUIZ3Container) {
+        qUIZ3Container.addEventListener("click", function (e) {
+          // Add your code here
+        });
+      }
+
+      var qUIZ4Container = document.getElementById("qUIZ4Container");
+      if (qUIZ4Container) {
+        qUIZ4Container.addEventListener("click", function (e) {
+          // Add your code here
+        });
+      }
+    </script>
+  </body>
+</html>
