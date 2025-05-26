@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Tambah Kelas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
     <style>
@@ -136,28 +137,14 @@
         padding: 40px;
         background-color: #f1f5f9;
       }
-
-      .custom-btn {
-        background-color: #1e293b;
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 10px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-      }
-
-      .custom-btn:hover {
-        background-color: #334155;
-      }
     </style>
   </head>
   <body>
-    <div class="container-flex">
-      <div class="sidebar d-flex flex-column justify-content-between">
+    <div class="d-flex">
+      <!-- Sidebar -->
+      <div class="sidebar d-flex flex-column justify-content-between p-3">
         <div>
-          <!-- Logo dan toggle sidebar -->
+          <!-- Logo -->
           <div class="d-flex align-items-center justify-content-between mb-4">
             <div class="d-flex align-items-center gap-2 logo-wrap">
               <h5 class="logo-title mb-0">Quizku.</h5>
@@ -172,7 +159,7 @@
 
           <!-- Menu -->
           <nav class="nav flex-column">
-            <a href="../dashboard/dashboard.html" class="nav-link">
+            <a href="../dashboard/dashboard.html" class="nav-link active">
               <img
                 src="../../Gambar/icon/dashboard.svg"
                 class="sidebar-icon active"
@@ -228,7 +215,7 @@
               />
               <span>Mahasiswa</span>
             </a>
-            <a href="../Kelas/kelas.html" class="nav-link active">
+            <a href="../Kelas/kelas.html" class="nav-link">
               <img
                 src="../../Gambar/icon/kelas.svg"
                 class="sidebar-icon"
@@ -276,29 +263,77 @@
         </div>
       </div>
 
-      <div class="main-content">
-        <h2 class="fw-bold mb-2">Tambah Kelas</h2>
-        <p class="mb-4">
-          Create and manage user accounts for students, lecturers, and
-          administrators.
-        </p>
-        <div class="card p-4 shadow-sm">
-          <div class="mb-3">
-            <label for="namaKelas" class="form-label">Nama Kelas</label>
-            <input
-              type="text"
-              class="form-control"
-              id="namaKelas"
-              placeholder="Masukkan nama kelas"
-            />
+      <!-- Main Content -->
+      <div class="flex-grow-1 p-4 main-content">
+        <div class="mb-4">
+          <h2>Dashboard</h2>
+          <p class="text-muted">
+            Yuk, kita lihat sekilas tentang sistem aplikasi kuis kamu
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="card border border-secondary shadow-sm">
+              <div class="card-body">
+                <h6
+                  class="card-title d-flex justify-content-between align-items-center"
+                >
+                  Jumlah Pengguna
+                  <img src="../../Gambar/icon/dosen.svg" width="24" />
+                </h6>
+                <h3>1.550</h3>
+                <p class="text-muted">Mahasiswa, Dosen, dan Admin</p>
+              </div>
+            </div>
           </div>
-          <button class="custom-btn w-100" onclick="simpanKelas()">
-            Simpan
-          </button>
+          <div class="col-md-3">
+            <div class="card border border-secondary shadow-sm">
+              <div class="card-body">
+                <h6
+                  class="card-title d-flex justify-content-between align-items-center"
+                >
+                  Jumlah Kuis
+                  <img src="../../Gambar/icon/person.svg" width="24" />
+                </h6>
+                <h3>120</h3>
+                <p class="text-muted">Kuis Aktif</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border border-secondary shadow-sm">
+              <div class="card-body">
+                <h6
+                  class="card-title d-flex justify-content-between align-items-center"
+                >
+                  Jumlah Kelas
+                  <img src="../../Gambar/icon/person.svg" width="24" />
+                </h6>
+                <h3>60</h3>
+                <p class="text-muted">Semester sekarang</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card border border-secondary shadow-sm">
+              <div class="card-body">
+                <h6
+                  class="card-title d-flex justify-content-between align-items-center"
+                >
+                  Jumlah Bank Soal
+                  <img src="../../Gambar/icon/person.svg" width="24" />
+                </h6>
+                <h3>1.500</h3>
+                <p class="text-muted">Bank soal telah dibuat</p>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
+    <!-- Sidebar Geser Script -->
     <script>
       const geserBtn = document.getElementById("geserSidebar");
       const sidebar = document.querySelector(".sidebar");
@@ -313,19 +348,6 @@
           ? "../../Gambar/icon/panah_kanan.svg"
           : "../../Gambar/icon/panah_kiri.svg";
       });
-
-      function simpanKelas() {
-        const namaKelas = document.getElementById("namaKelas").value.trim();
-        if (namaKelas) {
-          const kelas = JSON.parse(localStorage.getItem("kelas")) || [];
-          kelas.push(namaKelas);
-          localStorage.setItem("kelas", JSON.stringify(kelas));
-          alert("Kelas berhasil disimpan!");
-          document.getElementById("namaKelas").value = "";
-        } else {
-          alert("Nama kelas tidak boleh kosong!");
-        }
-      }
     </script>
   </body>
 </html>

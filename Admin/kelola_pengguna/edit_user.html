@@ -9,37 +9,114 @@
     />
     <style>
       body {
+        font-family: "Poppins", sans-serif;
         background-color: #f1f5f9;
       }
 
       .sidebar {
+        background-color: #1d2d44;
+        color: white;
+        height: 100vh;
         width: 250px;
-        background-color: #1e293b;
-        color: #fff;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        padding: 20px 10px;
+        border-right: 2px solid #e2e8f0;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
       }
 
-      .sidebar a {
-        color: #cbd5e1;
-        display: block;
-        padding: 10px;
-        border-radius: 8px;
-        text-decoration: none;
-        margin-bottom: 5px;
+      .sidebar.collapsed {
+        width: 80px;
       }
 
-      .sidebar a.active,
-      .sidebar a:hover {
+      .sidebar .nav-link {
+        color: #f1f4f5;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+      }
+
+      .sidebar .nav-link span {
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.collapsed .nav-link span,
+      .sidebar.collapsed .logout-text,
+      .sidebar.collapsed .logo-title,
+      .sidebar.collapsed .profile-info {
+        display: none !important;
+      }
+
+      .sidebar.collapsed .nav-link {
+        justify-content: center;
+      }
+
+      .sidebar.collapsed .logout-btn {
+        width: auto;
+        padding: 0.5rem;
+        justify-content: center;
+      }
+
+      .active {
         background-color: #334155;
         color: #fff;
+        border-radius: 10px;
+      }
+      .line-icon {
+        width: 100%;
+        margin: 10px 0;
       }
 
-      .main-content {
-        margin-left: 260px;
-        padding: 40px;
+      .profile-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .logout-btn {
+        background-color: #f1f4f5;
+        color: #1d2d44;
+        border-radius: 5px;
+        width: 100%;
+        transition: width 0.3s ease;
+      }
+
+      .sidebar-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .logo-geser {
+        width: 15px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-title {
+        font-size: 1.25rem;
+        transition: opacity 0.3s ease;
+      }
+
+      .logo-wrap img {
+        height: 28px;
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          position: fixed;
+          z-index: 1000;
+          height: 100vh;
+        }
+
+        .main-content {
+          margin-left: 250px;
+          transition: margin-left 0.3s ease;
+        }
+
+        .sidebar.collapsed + .main-content {
+          margin-left: 80px;
+        }
       }
 
       .form-container {
@@ -69,40 +146,126 @@
     </style>
   </head>
   <body>
-   <!-- navbar.html -->
-<div class="sidebar">
-  <h2 class="mb-4">Quizku.</h2>
-  <a href="#">Dashboard</a>
-  <a href="../kelola_pengguna/kelola_pengguna.html" class="active"
-    >Kelola Pengguna</a
-  >
-  <a href="#">Bank Soal</a>
-  <a href="#">Histori Quiz</a>
-  <a href="../Matakuliah/matakuliah.html">Matakuliah</a>
-  <a href="../Dosen/dosen.html">Dosen</a>
-  <a href="../Mahasiswa/mahasiswa.html">Mahasiswa</a>
-  <a href="../Kelas/kelas.html">Kelas</a>
-  <a href="#">Pengaturan</a>
-
-  <div class="profile_sidebar mt-5 pt-4 border-top">
-    <div class="d-flex align-items-center gap-2">
-      <img
-        src="https://i.pravatar.cc/40"
-        class="rounded-circle"
-        alt="User"
-        width="32"
-      />
-
+    <div class="sidebar d-flex flex-column justify-content-between p-3">
       <div>
-        <small>Dominick</small><br />
-        <small class="text-light">Dominick@gmail.com</small>
+        <!-- Logo -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="d-flex align-items-center gap-2 logo-wrap">
+            <h5 class="logo-title mb-0">Quizku.</h5>
+          </div>
+          <img
+            src="../../Gambar/icon/panah_kiri.svg"
+            alt="geser"
+            class="logo-geser"
+            id="geserSidebar"
+          />
+        </div>
+
+        <!-- Menu -->
+        <nav class="nav flex-column">
+          <a href="../dashboard/dashboard.html" class="nav-link active">
+            <img
+              src="../../Gambar/icon/dashboard.svg"
+              class="sidebar-icon active"
+              alt="Dashboard"
+            />
+            <span>Dashboard</span>
+          </a>
+          <a href="../kelola_pengguna/kelola_pengguna.html" class="nav-link">
+            <img
+              src="../../Gambar/icon/kelola_pengguna.svg"
+              class="sidebar-icon"
+              alt="Kelola Pengguna"
+            />
+            <span>Kelola Pengguna</span>
+          </a>
+          <a href="../Bank Soal/bank_soal.html" class="nav-link">
+            <img
+              src="../../Gambar/icon/bank_soal.svg"
+              class="sidebar-icon"
+              alt="Bank Soal"
+            />
+            <span>Bank Soal</span>
+          </a>
+          <a href="../History Quis/history_kuis.html" class="nav-link">
+            <img
+              src="../../Gambar/icon/history_quiz.svg"
+              class="sidebar-icon"
+              alt="Histori Quiz"
+            />
+            <span>Histori Quiz</span>
+          </a>
+          <a href="../Matakuliah/matakuliah.html" class="nav-link">
+            <img
+              src="../../Gambar/icon/matakuliah.svg"
+              class="sidebar-icon"
+              alt="Matakuliah"
+            />
+            <span>Matakuliah</span>
+          </a>
+          <a href="../Dosen/dosen.html" class="nav-link">
+            <img
+              src="../../Gambar/icon/dosen.svg"
+              class="sidebar-icon"
+              alt="Dosen"
+            />
+            <span>Dosen</span>
+          </a>
+          <a href="../Mahasiswa/mahasiswa.html" class="nav-link">
+            <img
+              src="../../Gambar/icon/mahasiswa.svg"
+              class="sidebar-icon"
+              alt="Mahasiswa"
+            />
+            <span>Mahasiswa</span>
+          </a>
+          <a href="../Kelas/kelas.html" class="nav-link">
+            <img
+              src="../../Gambar/icon/kelas.svg"
+              class="sidebar-icon"
+              alt="Kelas"
+            />
+            <span>Kelas</span>
+          </a>
+          <a href="../Pengaturan/pengaturan.html" class="nav-link">
+            <img
+              src="../../Gambar/icon/pengaturan.svg"
+              class="sidebar-icon"
+              alt="Pengaturan"
+            />
+            <span>Pengaturan</span>
+          </a>
+        </nav>
+      </div>
+      <div>
+        <!-- Garis -->
+        <img
+          class="line-icon"
+          alt="line"
+          src="../../Gambar/icon/Line 5.svg"
+        />
+
+        <!-- Profile -->
+        <div class="d-flex align-items-center mb-2">
+          <img src="Ellipse 8.png" alt="profile" class="profile-img me-2" />
+          <div class="profile-info">
+            <strong>Dominick</strong><br />
+            <small>dominick@gmail.com</small>
+          </div>
+        </div>
+        <button
+          class="btn logout-btn d-flex align-items-center justify-content-center"
+        >
+          <img
+            src="../../Gambar/icon/Logout.svg"
+            class="me-2"
+            style="width: 18px"
+            alt="Logout"
+          />
+          <span class="logout-text">Logout</span>
+        </button>
       </div>
     </div>
-    <a href="../login/login.html" class="btn btn-light btn-sm w-100 mt-3"
-      >Logout</a
-    >
-  </div>
-</div>
 
     <div class="main-content">
       <a

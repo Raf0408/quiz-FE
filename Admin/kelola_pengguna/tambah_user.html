@@ -11,42 +11,131 @@
       body {
         background-color: #f1f5f9;
         font-family: "Segoe UI", sans-serif;
+        margin: 0;
+      }
+      .container-flex {
+        display: flex;
+        min-height: 100vh;
       }
 
       .sidebar {
-        width: 240px;
-        background-color: #1e293b;
-        color: #fff;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        padding: 20px 10px;
+        background-color: #1d2d44;
+        color: white;
+        height: 100vh;
+        width: 250px;
+        border-right: 2px solid #e2e8f0;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
       }
 
-      .sidebar h5 {
-        font-weight: bold;
+      .sidebar.collapsed {
+        width: 80px;
       }
 
-      .sidebar a {
-        color: #cbd5e1;
-        display: block;
-        padding: 10px;
+      .sidebar .nav-link {
+        color: #f1f4f5;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        padding: 0.5rem 0.75rem;
         border-radius: 8px;
-        text-decoration: none;
-        margin-bottom: 5px;
       }
 
-      .sidebar a.active,
-      .sidebar a:hover {
+      .sidebar .nav-link:hover {
+        background-color: #334155;
+        color: white;
+      }
+
+      .sidebar .nav-link span {
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.collapsed .nav-link span,
+      .sidebar.collapsed .logout-text,
+      .sidebar.collapsed .logo-title,
+      .sidebar.collapsed .profile-info {
+        display: none !important;
+      }
+
+      .sidebar.collapsed .nav-link {
+        justify-content: center;
+      }
+
+      .sidebar.collapsed .logout-btn {
+        width: auto;
+        padding: 0.5rem;
+        justify-content: center;
+      }
+
+      .active {
         background-color: #334155;
         color: #fff;
+        border-radius: 10px;
       }
 
+      .line-icon {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .profile-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .logout-btn {
+        background-color: #f1f4f5;
+        color: #1d2d44;
+        border-radius: 5px;
+        width: 100%;
+        transition: width 0.3s ease;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .logout-btn:hover {
+        background-color: #e2e8f0;
+      }
+
+      .sidebar-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .logo-geser {
+        width: 15px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-title {
+        font-size: 1.25rem;
+        transition: opacity 0.3s ease;
+        margin: 0;
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      /* Main content mengambil sisa ruang */
       .main-content {
-        margin-left: 260px;
+        flex-grow: 1;
         padding: 40px;
+        background-color: #f1f5f9;
       }
-
       .form-box {
         background: #fff;
         border-radius: 20px;
@@ -78,109 +167,213 @@
     </style>
   </head>
   <body>
-    <!-- navbar.html -->
-    <div class="sidebar">
-      <h2 class="mb-4">Quizku.</h2>
-      <a href="#">Dashboard</a>
-      <a href="../kelola_pengguna/kelola_pengguna.html" class="active"
-        >Kelola Pengguna</a
-      >
-      <a href="#">Bank Soal</a>
-      <a href="#">Histori Quiz</a>
-      <a href="../Matakuliah/matakuliah.html">Matakuliah</a>
-      <a href="../Dosen/dosen.html">Dosen</a>
-      <a href="../Mahasiswa/mahasiswa.html">Mahasiswa</a>
-      <a href="../Kelas/kelas.html">Kelas</a>
-      <a href="#">Pengaturan</a>
+    <div class="d-flex">
+      <div class="sidebar d-flex flex-column justify-content-between p-3">
+        <div>
+          <!-- Logo -->
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-2 logo-wrap">
+              <h5 class="logo-title mb-0">Quizku.</h5>
+            </div>
+            <img
+              src="../../Gambar/icon/panah_kiri.svg"
+              alt="geser"
+              class="logo-geser"
+              id="geserSidebar"
+            />
+          </div>
 
-      <div class="profile_sidebar mt-5 pt-4 border-top">
-        <div class="d-flex align-items-center gap-2">
+          <!-- Menu -->
+          <nav class="nav flex-column">
+            <a href="../dashboard/dashboard.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/dashboard.svg"
+                class="sidebar-icon active"
+                alt="Dashboard"
+              />
+              <span>Dashboard</span>
+            </a>
+            <a
+              href="../kelola_pengguna/kelola_pengguna.html"
+              class="nav-link active"
+            >
+              <img
+                src="../../Gambar/icon/kelola_pengguna.svg"
+                class="sidebar-icon"
+                alt="Kelola Pengguna"
+              />
+              <span>Kelola Pengguna</span>
+            </a>
+            <a href="../Bank Soal/bank_soal.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/bank_soal.svg"
+                class="sidebar-icon"
+                alt="Bank Soal"
+              />
+              <span>Bank Soal</span>
+            </a>
+            <a href="../History Quis/history_kuis.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/history_quiz.svg"
+                class="sidebar-icon"
+                alt="Histori Quiz"
+              />
+              <span>Histori Quiz</span>
+            </a>
+            <a href="../Matakuliah/matakuliah.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/matakuliah.svg"
+                class="sidebar-icon"
+                alt="Matakuliah"
+              />
+              <span>Matakuliah</span>
+            </a>
+            <a href="../Dosen/dosen.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/dosen.svg"
+                class="sidebar-icon"
+                alt="Dosen"
+              />
+              <span>Dosen</span>
+            </a>
+            <a href="../Mahasiswa/mahasiswa.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/mahasiswa.svg"
+                class="sidebar-icon"
+                alt="Mahasiswa"
+              />
+              <span>Mahasiswa</span>
+            </a>
+            <a href="../Kelas/kelas.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/kelas.svg"
+                class="sidebar-icon"
+                alt="Kelas"
+              />
+              <span>Kelas</span>
+            </a>
+            <a href="../Pengaturan/pengaturan.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/pengaturan.svg"
+                class="sidebar-icon"
+                alt="Pengaturan"
+              />
+              <span>Pengaturan</span>
+            </a>
+          </nav>
+        </div>
+        <div>
+          <!-- Garis -->
           <img
-            src="https://i.pravatar.cc/40"
-            class="rounded-circle"
-            alt="User"
-            width="32"
+            class="line-icon"
+            alt="line"
+            src="../../Gambar/icon/Line 5.svg"
           />
 
-          <div>
-            <small>Dominick</small><br />
-            <small class="text-light">Dominick@gmail.com</small>
+          <!-- Profile -->
+          <div class="d-flex align-items-center mb-2">
+            <img src="Ellipse 8.png" alt="profile" class="profile-img me-2" />
+            <div class="profile-info">
+              <strong>Dominick</strong><br />
+              <small>dominick@gmail.com</small>
+            </div>
           </div>
+          <button
+            class="btn logout-btn d-flex align-items-center justify-content-center"
+          >
+            <img
+              src="../../Gambar/icon/Logout.svg"
+              class="me-2"
+              style="width: 18px"
+              alt="Logout"
+            />
+            <span class="logout-text">Logout</span>
+          </button>
         </div>
-        <a href="../login/login.html" class="btn btn-light btn-sm w-100 mt-3"
-          >Logout</a
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <a
+          href="kelola_pengguna.html"
+          class="kembali text-decoration-none mb-3 d-inline-block"
+          >← Kembali</a
         >
+        <h3 class="fw-bold mb-1">User Management</h3>
+        <p class="text-muted mb-4">
+          Create and manage user accounts for students, lecturers, and
+          administrators.
+        </p>
+
+        <div class="form-box">
+          <form id="formUser">
+            <div class="mb-3">
+              <label for="nama" class="form-label">Nama</label>
+              <input
+                type="text"
+                class="form-control"
+                id="nama"
+                placeholder="Masukkan nama"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input
+                type="email"
+                class="form-control"
+                id="email"
+                placeholder="Masukkan email"
+                required
+              />
+            </div>
+            <div class="mb-3">
+              <label for="role" class="form-label">Roles</label>
+              <select id="role" class="form-select" required>
+                <option value="">All Roles</option>
+                <option value="mahasiswa">Mahasiswa</option>
+                <option value="dosen">Dosen</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+            <div class="mb-3" id="input-kelas" hidden>
+              <label for="pilih-kelas" class="form-label">Pilih Kelas</label>
+              <select id="pilih-kelas" class="form-select" required>
+                <option value="G-22">G-22</option>
+                <option value="F-22">F-22</option>
+                <option value="H-22">H-22</option>
+              </select>
+            </div>
+            <div class="mb-4">
+              <label for="password" class="form-label">Password</label>
+              <input
+                type="password"
+                class="form-control"
+                id="password"
+                placeholder="Masukkan password"
+                required
+              />
+            </div>
+            <button type="submit" class="custom-btn w-100">Simpan</button>
+          </form>
+        </div>
       </div>
     </div>
+    <script>
+      const geserBtn = document.getElementById("geserSidebar");
+      const sidebar = document.querySelector(".sidebar");
 
-    <!-- Main Content -->
-    <div class="main-content">
-      <a
-        href="kelola_pengguna.html"
-        class="kembali text-decoration-none mb-3 d-inline-block"
-        >← Kembali</a
-      >
-      <h3 class="fw-bold mb-1">User Management</h3>
-      <p class="text-muted mb-4">
-        Create and manage user accounts for students, lecturers, and
-        administrators.
-      </p>
+      let isCollapsed = false;
 
-      <div class="form-box">
-        <form id="formUser">
-          <div class="mb-3">
-            <label for="nama" class="form-label">Nama</label>
-            <input
-              type="text"
-              class="form-control"
-              id="nama"
-              placeholder="Masukkan nama"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="email" class="form-label">Email</label>
-            <input
-              type="email"
-              class="form-control"
-              id="email"
-              placeholder="Masukkan email"
-              required
-            />
-          </div>
-          <div class="mb-3">
-            <label for="role" class="form-label">Roles</label>
-            <select id="role" class="form-select" required>
-              <option value="">All Roles</option>
-              <option value="mahasiswa">Mahasiswa</option>
-              <option value="dosen">Dosen</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-          <div class="mb-3" id="input-kelas" hidden>
-            <label for="pilih-kelas" class="form-label">Pilih Kelas</label>
-            <select id="pilih-kelas" class="form-select" required>
-              <option value="">All Roles</option>
-              <option value="mahasiswa">Mahasiswa</option>
-              <option value="dosen">Dosen</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-          <div class="mb-4">
-            <label for="password" class="form-label">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              placeholder="Masukkan password"
-              required
-            />
-          </div>
-          <button type="submit" class="custom-btn w-100">Simpan</button>
-        </form>
-      </div>
-    </div>
+      geserBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+        isCollapsed = !isCollapsed;
 
+        geserBtn.src = isCollapsed
+          ? "../../Gambar/icon/panah_kanan.svg"
+          : "../../Gambar/icon/panah_kiri.svg";
+      });
+    </script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         document
