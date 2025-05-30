@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dosen - Tambah Soal</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Styles dipertahankan seperti semula */
+      body {
+        background-color: #f1f5f9;
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+      }
+      .container-flex {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background-color: #1d2d44;
+        color: white;
+        height: 100vh;
+        width: 250px;
+        border-right: 2px solid #e2e8f0;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+      }
+
+      .sidebar.collapsed {
+        width: 80px;
+      }
+
+      .sidebar .nav-link {
+        color: #f1f4f5;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #334155;
+        color: white;
+      }
+
+      .sidebar .nav-link span {
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.collapsed .nav-link span,
+      .sidebar.collapsed .logout-text,
+      .sidebar.collapsed .logo-title,
+      .sidebar.collapsed .profile-info {
+        display: none !important;
+      }
+
+      .sidebar.collapsed .nav-link {
+        justify-content: center;
+      }
+
+      .sidebar.collapsed .logout-btn {
+        width: auto;
+        padding: 0.5rem;
+        justify-content: center;
+      }
+
+      .active {
+        background-color: #334155;
+        color: #fff;
+        border-radius: 10px;
+      }
+
+      .line-icon {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .profile-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .logout-btn {
+        background-color: #f1f4f5;
+        color: #1d2d44;
+        border-radius: 5px;
+        width: 100%;
+        transition: width 0.3s ease;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .logout-btn:hover {
+        background-color: #e2e8f0;
+      }
+
+      .sidebar-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .logo-geser {
+        width: 15px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-title {
+        font-size: 1.25rem;
+        transition: opacity 0.3s ease;
+        margin: 0;
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+        background-color: #f1f5f9;
+        margin-left: 250px;
+      }
+
+      .badge.bg-secondary {
+        background-color: #6c757d;
+        font-size: 0.8rem;
+        padding: 0.4em 0.6em;
+        border-radius: 10px;
+      }
+      .kembali {
+        color: #1e2a3a; /* Warna teks */
+      }
+      .custom-btn {
+        background-color: #1e2a3a;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+      }
+      .custom-btn:hover {
+        background-color: #2a3e50;
+      }
+      form input.form-control {
+        border-radius: 8px;
+        padding: 10px 14px;
+        border: 1px solid #cbd5e1;
+      }
+      form label {
+        font-size: 0.95rem;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar akan dimuat di sini -->
+    <div class="container-flex">
+      <!-- Sidebar -->
+      <div id="sidebar-container"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <a
+          href="bank_soal.html"
+          class="kembali text-decoration-none mb-3 d-inline-block"
+          >← Kembali</a
+        >
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2>Buat Soal</h2>
+            <p class="text-muted">
+              Yuk, kita lihat sekilas tentang sistem aplikasi kuis kamu
+            </p>
+          </div>
+        </div>
+        <div class="d-flex justify-content-center align-items-center">
+          <div class="w-100" style="max-width: 600px">
+            <!-- Tabs -->
+            <div class="d-flex mb-3">
+              <button id="btnInfo" class="custom-btn flex-fill active-tab">
+                Informasi Soal
+              </button>
+              <button id="btnDaftar" class="btn btn-light flex-fill text-dark">
+                Daftar Soal
+              </button>
+            </div>
+
+            <!-- Informasi Soal Section -->
+            <div
+              id="infoSection"
+              class="bg-white shadow-sm p-4 rounded"
+              style="border: 1px solid #e2e8f0"
+            >
+              <h5 class="fw-bold mb-1">Informasi soal</h5>
+              <p class="text-muted mb-4">Masukkan informasi detail soal</p>
+              <form>
+                <div class="mb-3">
+                  <label for="namaSoal" class="form-label fw-semibold"
+                    >Nama Soal</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="namaSoal"
+                    placeholder="Nama Soal"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="jumlahSoal" class="form-label fw-semibold"
+                    >Jumlah Soal</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="jumlahSoal"
+                    placeholder="Jumlah Soal"
+                  />
+                </div>
+                <div class="mb-3">
+                  <label for="waktuPengerjaan" class="form-label fw-semibold"
+                    >Waktu Pengerjaan</label
+                  >
+                  <input
+                    type="number"
+                    class="form-control"
+                    id="waktuPengerjaan"
+                    placeholder="Waktu Pengerjaan"
+                  />
+                </div>
+                <div class="mb-4">
+                  <label for="tanggalDibuat" class="form-label fw-semibold"
+                    >Tanggal Dibuat</label
+                  >
+                  <input type="date" class="form-control" id="tanggalDibuat" />
+                </div>
+                <button type="submit" class="custom-btn w-100">
+                  Selanjutnya
+                </button>
+              </form>
+            </div>
+
+            <!-- DAFTAR SOAL SECTION -->
+            <div
+              id="daftarSection"
+              class="bg-white shadow-sm p-4 rounded overflow-auto"
+              style="
+                display: none;
+                border: 1px solid #e2e8f0;
+                max-height: 600px;
+              "
+            >
+              <h5 class="fw-bold mb-3">Buat Pertanyaan</h5>
+              <p class="text-muted">Tambahkan pertanyaan baru ke dalam kuis</p>
+
+              <div class="mb-3">
+                <label for="pertanyaan">Pertanyaan</label>
+                <textarea
+                  class="form-control"
+                  id="pertanyaan"
+                  rows="2"
+                  placeholder="Masukkan soal"
+                ></textarea>
+              </div>
+
+              <div class="mb-3">
+                <label>Jawaban pilihan ganda</label>
+                <div id="pilihanGanda">
+                  <div class="form-check mt-2">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="jawaban"
+                    />
+                    <input
+                      type="text"
+                      class="form-control d-inline-block w-75 ms-2"
+                      placeholder="Masukkan jawaban A"
+                    />
+                  </div>
+                  <div class="form-check mt-2">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="jawaban"
+                    />
+                    <input
+                      type="text"
+                      class="form-control d-inline-block w-75 ms-2"
+                      placeholder="Masukkan jawaban B"
+                    />
+                  </div>
+                  <div class="form-check mt-2">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="jawaban"
+                    />
+                    <input
+                      type="text"
+                      class="form-control d-inline-block w-75 ms-2"
+                      placeholder="Masukkan jawaban C"
+                    />
+                  </div>
+                  <div class="form-check mt-2 mb-3">
+                    <input
+                      type="radio"
+                      class="form-check-input"
+                      name="jawaban"
+                    />
+                    <input
+                      type="text"
+                      class="form-control d-inline-block w-75 ms-2"
+                      placeholder="Masukkan jawaban D"
+                    />
+                  </div>
+                </div>
+                <button
+                  id="btnTambahPertanyaan"
+                  type="button"
+                  class="custom-btn w-100"
+                >
+                  Tambah Pertanyaan
+                </button>
+              </div>
+
+              <!-- List Soal Akan Ditampilkan Di Sini -->
+              <div id="daftarSoalList" class="mt-4"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Load Sidebar -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("../sidebar.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("sidebar-container").innerHTML = data;
+
+            // Sidebar geser
+            const geserBtn = document.getElementById("geserSidebar");
+            const sidebar = document.querySelector(".sidebar");
+
+            if (geserBtn && sidebar) {
+              let isCollapsed = false;
+              geserBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+                isCollapsed = !isCollapsed;
+
+                geserBtn.src = isCollapsed
+                  ? "../../Gambar/icon/panah_kanan.svg"
+                  : "../../Gambar/icon/panah_kiri.svg";
+              });
+            }
+
+            // active sidebar
+            const currentPath = window.location.pathname.split("/").pop();
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            navLinks.forEach((link) => {
+              const linkPath = link.getAttribute("href").split("/").pop();
+
+              if (currentPath === linkPath) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+          });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        document.querySelector("form").addEventListener("submit", function (e) {
+          e.preventDefault(); // Mencegah reload halaman
+
+          // Ambil data dari form
+          const nama = document.getElementById("namaSoal").value;
+          const jumlah = document.getElementById("jumlahSoal").value;
+          const waktu = document.getElementById("waktuPengerjaan").value;
+          const tanggal = document.getElementById("tanggalDibuat").value;
+
+          // Buat objek soal
+          const soal = { nama, jumlah, waktu, tanggal };
+
+          // Simpan ke sessionStorage (sementara)
+          sessionStorage.setItem("soalBaru", JSON.stringify(soal));
+
+          // Redirect ke halaman bank soal
+          window.location.href = "buat_soal.html";
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const btnInfo = document.getElementById("btnInfo");
+        const btnDaftar = document.getElementById("btnDaftar");
+        const infoSection = document.getElementById("infoSection");
+        const daftarSection = document.getElementById("daftarSection");
+
+        btnInfo.addEventListener("click", function () {
+          infoSection.style.display = "block";
+          daftarSection.style.display = "none";
+          btnInfo.classList.add("custom-btn");
+          btnInfo.classList.remove("btn", "btn-light", "text-dark");
+          btnDaftar.classList.remove("custom-btn");
+          btnDaftar.classList.add("btn", "btn-light", "text-dark");
+        });
+
+        btnDaftar.addEventListener("click", function () {
+          infoSection.style.display = "none";
+          daftarSection.style.display = "block";
+          btnDaftar.classList.add("custom-btn");
+          btnDaftar.classList.remove("btn", "btn-light", "text-dark");
+          btnInfo.classList.remove("custom-btn");
+          btnInfo.classList.add("btn", "btn-light", "text-dark");
+        });
+      });
+    </script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const btnTambah = document.getElementById("btnTambahPertanyaan");
+        const daftarSoalList = document.getElementById("daftarSoalList");
+        let nomorUrut = 1; // Mulai dari soal 1
+
+        btnTambah.addEventListener("click", function () {
+          const pertanyaanText = document
+            .getElementById("pertanyaan")
+            .value.trim();
+          const pilihanInputs = document.querySelectorAll(
+            "#pilihanGanda input[type='text']"
+          );
+          const radioInputs = document.querySelectorAll(
+            "#pilihanGanda input[type='radio']"
+          );
+
+          const selectedJawaban = Array.from(radioInputs).findIndex(
+            (radio) => radio.checked
+          );
+
+          if (
+            pertanyaanText === "" ||
+            Array.from(pilihanInputs).some(
+              (input) => input.value.trim() === ""
+            ) ||
+            selectedJawaban === -1
+          ) {
+            alert(
+              "Silakan lengkapi pertanyaan, semua jawaban, dan pilih jawaban yang benar."
+            );
+            return;
+          }
+
+          // Buat daftar jawaban dengan penanda (✔) pada jawaban benar
+          const jawabanPilihan = Array.from(pilihanInputs).map(
+            (input, index) => {
+              const label = String.fromCharCode(65 + index); // A, B, C, D
+              const isJawabanBenar =
+                index === selectedJawaban
+                  ? " <span style='color:green'>✔</span>"
+                  : "";
+              return `<li><strong>${label}:</strong> ${input.value}${isJawabanBenar}</li>`;
+            }
+          );
+
+          const soalBaru = document.createElement("div");
+          soalBaru.classList.add(
+            "p-3",
+            "border",
+            "rounded",
+            "mb-3",
+            "bg-light"
+          );
+          soalBaru.innerHTML = `
+          <h6 class="fw-bold mb-1">Soal ${nomorUrut}</h6>
+          <p class="mb-2"><strong>Pertanyaan:</strong> ${pertanyaanText}</p>
+          <ul>${jawabanPilihan.join("")}</ul>
+        `;
+
+          daftarSoalList.appendChild(soalBaru);
+
+          // Reset field input
+          document.getElementById("pertanyaan").value = "";
+          pilihanInputs.forEach((input) => (input.value = ""));
+          radioInputs.forEach((radio) => (radio.checked = false));
+
+          nomorUrut++;
+        });
+      });
+    </script>
+  </body>
+</html>
