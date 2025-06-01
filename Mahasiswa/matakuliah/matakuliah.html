@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Mahasiswa - Matakuliah</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Styles dipertahankan seperti semula */
+      body {
+        background-color: #f1f5f9;
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+      }
+      .container-flex {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background-color: #1d2d44;
+        color: white;
+        height: 100vh;
+        width: 250px;
+        border-right: 2px solid #e2e8f0;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+      }
+
+      .sidebar.collapsed {
+        width: 80px;
+      }
+
+      .sidebar .nav-link {
+        color: #f1f4f5;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #334155;
+        color: white;
+      }
+
+      .sidebar .nav-link span {
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.collapsed .nav-link span,
+      .sidebar.collapsed .logout-text,
+      .sidebar.collapsed .logo-title,
+      .sidebar.collapsed .profile-info {
+        display: none !important;
+      }
+
+      .sidebar.collapsed .nav-link {
+        justify-content: center;
+      }
+
+      .sidebar.collapsed .logout-btn {
+        width: auto;
+        padding: 0.5rem;
+        justify-content: center;
+      }
+
+      .active {
+        background-color: #334155;
+        color: #fff;
+        border-radius: 10px;
+      }
+
+      .line-icon {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .profile-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .logout-btn {
+        background-color: #f1f4f5;
+        color: #1d2d44;
+        border-radius: 5px;
+        width: 100%;
+        transition: width 0.3s ease;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .logout-btn:hover {
+        background-color: #e2e8f0;
+      }
+
+      .sidebar-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .logo-geser {
+        width: 15px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-title {
+        font-size: 1.25rem;
+        transition: opacity 0.3s ease;
+        margin: 0;
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+        background-color: #f1f5f9;
+        margin-left: 250px;
+      }
+      .search {
+        position: absolute;
+        height: 45%;
+        width: 23.38%;
+        top: 27.52%;
+        left: 14.03%;
+        letter-spacing: 0.1em;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .search-bar {
+        width: 278px;
+        position: relative;
+        box-shadow: 14px 16px 6px rgba(0, 0, 0, 0.01),
+          9px 10px 6px rgba(0, 0, 0, 0.05), 5px 6px 5px rgba(0, 0, 0, 0.16),
+          2px 3px 3px rgba(0, 0, 0, 0.27), 1px 1px 2px rgba(0, 0, 0, 0.32);
+        border-radius: 12px;
+        background-color: #f1f4f5;
+        border: 2px solid #1d2d44;
+        box-sizing: border-box;
+        height: 40px;
+        overflow: hidden;
+        flex-shrink: 0;
+        text-align: center;
+        font-size: 14px;
+      }
+
+      .frame-group {
+        align-self: stretch;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 27px;
+      }
+      .semester-6 {
+        position: relative;
+        font-size: 13px;
+        display: none;
+      }
+      .layanan-web-parent {
+        width: 170px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 5px;
+      }
+      .quiz-1-inner {
+        width: 270px;
+        height: 312px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+      }
+      .quiz-1 {
+        flex: 1;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #e761a8;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+        color: #f4f5f9;
+      }
+      .rekayasa-perangkat-lunak {
+        width: 272px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .quiz-2 {
+        flex: 1;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #9c6cf4;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+      }
+      .sistem-pendukung-keputusan {
+        width: 285px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .quiz-3 {
+        flex: 1;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #f8b24f;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+      }
+      .quiz-4 {
+        flex: 1;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #54df21;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+      }
+      .quiz-1-parent {
+        align-self: stretch;
+        height: 370px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 10px;
+        box-sizing: border-box;
+        gap: 30px;
+      }
+      .quiz-11 {
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #e761a8;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        cursor: pointer;
+        color: #f4f5f9;
+      }
+      .rekayasa-perangkat-lunak1 {
+        width: 277px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .semester-65 {
+        position: relative;
+        font-size: 13px;
+      }
+      .quiz-21 {
+        width: 330.7px;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #9c6cf4;
+        overflow: hidden;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .pemrograman-internet {
+        width: 271px;
+        position: relative;
+        display: flex;
+        align-items: center;
+      }
+      .quiz-31 {
+        width: 330.7px;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #f8b24f;
+        overflow: hidden;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .quiz-41 {
+        width: 330.7px;
+        box-shadow: 55px 58px 22px rgba(0, 0, 0, 0),
+          35px 37px 20px rgba(0, 0, 0, 0.01), 20px 21px 17px rgba(0, 0, 0, 0.05),
+          9px 9px 13px rgba(0, 0, 0, 0.09), 2px 2px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 25px;
+        background-color: #54df21;
+        overflow: hidden;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 19px 30px;
+        box-sizing: border-box;
+        cursor: pointer;
+      }
+      .frame-container {
+        align-self: stretch;
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 25px;
+        font-size: 24px;
+        color: #fff;
+      }
+      .frame-parent {
+        align-self: stretch;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 25px;
+      }
+      .client-homepage-inner {
+        align-self: stretch;
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        padding: 25px 30px;
+        font-size: 40px;
+        color: #1d2d44;
+      }
+      .client-homepage {
+        width: 100%;
+        position: relative;
+        background-color: #f1f4f5;
+        height: 1117px;
+        overflow: hidden;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 1px;
+        text-align: left;
+        font-size: 16px;
+        color: #f1f4f5;
+        font-family: Poppins;
+      }
+      
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar akan dimuat di sini -->
+    <div class="container-flex">
+      <!-- Sidebar -->
+      <div id="sidebar-container"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2>Daftar Mata Kuliah</h2>
+            <p class="text-muted">
+              Yuk, kita lihat sekilas tentang sistem aplikasi kuis kamu
+            </p>
+          </div>
+          <div class="search-bar">
+            <img class="mynauisearch-icon" alt="" src="../Gambar/icon/mynaui_search.svg" />
+            <div class="search">Search</div>
+          </div>
+      </div>
+      <div class="frame-container">
+        <div class="quiz-1-parent">
+          <div class="quiz-1" id="qUIZ1Container">
+            <div class="quiz-1-inner">
+              <div class="layanan-web-parent">
+                <b class="quizku">Layanan Web</b>
+                <div class="semester-6">Semester 6</div>
+              </div>
+            </div>
+          </div>
+          <div class="quiz-2" id="qUIZ2Container">
+            <div class="quiz-1-inner">
+              <div class="layanan-web-parent">
+                <b class="rekayasa-perangkat-lunak"
+                  >Rekayasa Perangkat Lunak</b
+                >
+                <div class="semester-6">Semester 6</div>
+              </div>
+            </div>
+          </div>
+          <div class="quiz-3" id="qUIZ3Container">
+            <div class="quiz-1-inner">
+              <div class="layanan-web-parent">
+                <b class="sistem-pendukung-keputusan"
+                  >Sistem Pendukung Keputusan</b
+                >
+                <div class="semester-6">Semester 6</div>
+              </div>
+            </div>
+          </div>
+          <div class="quiz-4" id="qUIZ4Container">
+            <div class="quiz-1-inner">
+              <div class="layanan-web-parent">
+                <b class="quizku">Metodologi Penelitian</b>
+                <div class="semester-6">Semester 6</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-1-parent">
+          <div class="quiz-11" id="qUIZ1Container">
+            <div class="quiz-1-inner">
+              <div class="layanan-web-parent">
+                <b class="quizku">Rekayasa Sistem</b>
+                <div class="semester-6">Semester 6</div>
+              </div>
+            </div>
+          </div>
+          <div class="quiz-21" id="qUIZ2Container">
+            <div class="quiz-1-inner">
+              <div class="layanan-web-parent">
+                <b class="rekayasa-perangkat-lunak1"
+                  >Rekayasa Perangkat Lunak</b
+                >
+                <div class="semester-65">Semester 6</div>
+              </div>
+            </div>
+          </div>
+          <div class="quiz-31" id="qUIZ3Container">
+            <div class="quiz-1-inner">
+              <div class="layanan-web-parent">
+                <b class="pemrograman-internet">Pemrograman Internet</b>
+                <div class="semester-65">Semester 6</div>
+              </div>
+            </div>
+          </div>
+          <div class="quiz-41" id="qUIZ4Container">
+            <div class="quiz-1-inner">
+              <div class="layanan-web-parent">
+                <b class="quizku">Kecerdasan Buatan</b>
+                <div class="semester-65">Semester 6</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Load Sidebar -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("../sidebar.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("sidebar-container").innerHTML = data;
+
+            // Sidebar geser
+            const geserBtn = document.getElementById("geserSidebar");
+            const sidebar = document.querySelector(".sidebar");
+
+            if (geserBtn && sidebar) {
+              let isCollapsed = false;
+              geserBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+                isCollapsed = !isCollapsed;
+
+                geserBtn.src = isCollapsed
+                  ? "../../Gambar/icon/panah_kanan.svg"
+                  : "../../Gambar/icon/panah_kiri.svg";
+              });
+            }
+
+            // active sidebar
+            const currentPath = window.location.pathname.split("/").pop();
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            navLinks.forEach((link) => {
+              const linkPath = link.getAttribute("href").split("/").pop();
+
+              if (currentPath === linkPath) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+          });
+      });
+    </script>
+  </body>
+</html>
