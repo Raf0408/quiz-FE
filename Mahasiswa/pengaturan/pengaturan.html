@@ -9,7 +9,7 @@
       rel="stylesheet"
     />
     <style>
-      body {
+     body {
         background-color: #f1f5f9;
         font-family: "Segoe UI", sans-serif;
         margin: 0;
@@ -133,86 +133,88 @@
 
       .main-content {
         flex-grow: 1;
-        padding: 40px 60px;
+        padding: 40px;
         background-color: #f1f5f9;
       }
-
-      .content-header {
+      .pengaturan-parent {
+        align-self: stretch;
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 2rem;
-      }
-
-      .search-container {
-        margin-bottom: 0;
-      }
-
-      .search-input {
-        width: 180px;
-        padding: 6px 14px;
-        border-radius: 10px;
-        border: 1px solid #e2e8f0;
-        font-size: 14px;
-        background-color: white;
-      }
-
-      .search-input::placeholder {
-        color: #94a3b8;
-      }
-
-      .course-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 24px;
-        padding: 1rem;
-      }
-
-      .course-card {
-        height: 280px;
-        padding: 32px;
-        border-radius: 24px;
-        text-decoration: none;
-        transition: transform 0.2s ease;
-        display: flex;
+        flex-direction: column;
         align-items: flex-start;
-        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        justify-content: flex-start;
+        gap: 15px;
+      }
+      .ubah-foto-profil {
+        align-self: stretch;
         position: relative;
       }
-
-      .card-title {
-        position: absolute;
-        top: 32px;
-        left: 32px;
-        font-size: 24px;
-        font-weight: 500;
-        color: white;
-        margin: 0;
-        line-height: 1.2;
-        max-width: 80%;
+      .drag-atau-masukan {
+        flex: 1;
+        position: relative;
       }
-
-      /* Updated styles for the last card */
-      .course-card:last-child {
-        grid-column: 1 / 2;
-        margin-top: 24px;
+      .drag-atau-masukan-foto-disini-wrapper {
+        align-self: stretch;
+        border-radius: 8px;
+        border: 1px solid #b1acac;
+        box-sizing: border-box;
+        height: 225px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        text-align: center;
+        color: #919191;
       }
-
-      /* Updated color styles with slightly lighter shades */
-      .course-card.pink {
-        background-color: #ec4899;
+      .ubah-foto-profil-parent {
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 10px;
       }
-
-      .course-card.purple {
-        background-color: #8b5cf6;
+      .masukan-password-baru-wrapper {
+        align-self: stretch;
+        border-radius: 8px;
+        border: 1px solid #b1acac;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        color: #919191;
       }
-
-      .course-card.orange {
-        background-color: #f59e0b;
+      .custom-btn {
+        background-color: #1e2a3a; 
+        color: white; 
+        border: none; 
+        border-radius: 10px; 
+        padding: 10px 20px;
+        font-weight: bold;
       }
-
-      .course-card.green {
-        background-color: #22c55e;
+      .custom-btn:hover {
+        background-color: #2a3e50; 
+      }
+      .frame-group {
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+        box-shadow: -34px 69px 22px rgba(141, 139, 139, 0),
+          -22px 44px 20px rgba(0, 0, 0, 0.01),
+          -12px 25px 17px rgba(0, 0, 0, 0.05),
+          -5px 11px 12px rgba(0, 0, 0, 0.09), -1px 3px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 14px;
+        background-color: #fff;
+        border: 1px solid #b1acac;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 25px;
+        gap: 70px;
+        font-size: 15px;
       }
     </style>
   </head>
@@ -220,36 +222,38 @@
     <div class="d-flex">
       <div id="sidebar-container"></div>
       <!-- Main Content -->
-      <div class="main-content">
-        <div class="content-header mb-4">
-          <div>
-            <h2>Daftar Mata Kuliah</h2>
-            <p class="text-muted">
-              Create and manage user accounts for students, lecturers, and
-              administrators.
-            </p>
+      <div class="flex-grow-1 p-4 main-content">
+        <div class="mb-4">
+          <h2>Pengaturan</h2>
+          <p class="text-muted">
+            Yuk, kita lihat sekilas tentang sistem aplikasi kuis kamu
+          </p>
+          <div class="frame-group">
+            <div class="pengaturan-parent">
+              <div class="ubah-foto-profil-parent">
+                <b class="ubah-foto-profil">Ubah foto profil</b>
+                <label for="fotoProfil" class="drag-atau-masukan-foto-disini-wrapper">
+                  <input type="file" name="fotoProfil" id="fotoProfil" accept="image/*" hidden />
+                  <div class="drag-atau-masukan" id="previewText">Drag atau Masukan foto disini</div>
+                </label>
+              </div>
+              
+              <div class="ubah-foto-profil-parent">
+                <b class="ubah-foto-profil">Ubah password</b>
+                <div class="masukan-password-baru-wrapper">
+                  <input
+                    type="password"
+                    name="passwordBaru"
+                    class="form-control border-0"
+                    placeholder="Masukkan password baru"
+                    style="outline: none; box-shadow: none;"
+                  />
+                </div>
+              </div>   
+            </div>
+              <button class="custom-btn w-100">Simpan</button>
+            </div>
           </div>
-          <div class="search-container">
-            <input type="search" class="search-input" placeholder="Search" />
-          </div>
-        </div>
-
-        <div class="course-grid">
-          <a href="konfirmasi_kuis.html" class="course-card pink">
-            <h3 class="card-title">Layanan Web</h3>
-          </a>
-          <a href="konfirmasi_kuis.html" class="course-card purple">
-            <h3 class="card-title">Rekayasa Perangkat Lunak</h3>
-          </a>
-          <a href="konfirmasi_kuis.html" class="course-card orange">
-            <h3 class="card-title">Sistem Pendukung Keputusan</h3>
-          </a>
-          <a href="konfirmasi_kuis.html" class="course-card green">
-            <h3 class="card-title">Metodologi Penelitian</h3>
-          </a>
-          <a href="konfirmasi_kuis.html" class="course-card pink">
-            <h3 class="card-title">Rekayasa Sistem</h3>
-          </a>
         </div>
       </div>
     </div>
