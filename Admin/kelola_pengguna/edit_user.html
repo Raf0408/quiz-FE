@@ -2,24 +2,57 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Edit Pengguna</title>
+    <title>Tambah User</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <style>
       body {
-        font-family: "Poppins", sans-serif;
         background-color: #f1f5f9;
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+      }
+      .container-flex {
+        display: flex;
+        min-height: 100vh;
       }
 
       .sidebar {
         background-color: #1d2d44;
         color: white;
-        height: 100vh;
+        min-height: 150vh;
         width: 250px;
         border-right: 2px solid #e2e8f0;
         transition: width 0.3s ease;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar > div:first-of-type {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow: hidden;
+        min-height: 0;
+      }
+
+      .sidebar
+        > div:first-of-type
+        > .d-flex.align-items-center.justify-content-between {
+        flex-shrink: 0;
+      }
+
+      .sidebar .nav.flex-column {
+        flex-grow: 1;
+        overflow-y: auto;
+      }
+
+      .sidebar > div:last-of-type {
         flex-shrink: 0;
       }
 
@@ -34,6 +67,13 @@
         align-items: center;
         gap: 10px;
         transition: all 0.3s ease;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #334155;
+        color: white;
       }
 
       .sidebar .nav-link span {
@@ -62,6 +102,7 @@
         color: #fff;
         border-radius: 10px;
       }
+
       .line-icon {
         width: 100%;
         margin: 10px 0;
@@ -80,6 +121,14 @@
         border-radius: 5px;
         width: 100%;
         transition: width 0.3s ease;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .logout-btn:hover {
+        background-color: #e2e8f0;
       }
 
       .sidebar-icon {
@@ -96,30 +145,22 @@
       .logo-title {
         font-size: 1.25rem;
         transition: opacity 0.3s ease;
+        margin: 0;
       }
 
-      .logo-wrap img {
-        height: 28px;
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
-      @media (max-width: 768px) {
-        .sidebar {
-          position: fixed;
-          z-index: 1000;
-          height: 100vh;
-        }
-
-        .main-content {
-          margin-left: 250px;
-          transition: margin-left 0.3s ease;
-        }
-
-        .sidebar.collapsed + .main-content {
-          margin-left: 80px;
-        }
+      /* Main content mengambil sisa ruang */
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+        background-color: #f1f5f9;
       }
-
-      .form-container {
+      .form-box {
         background: #fff;
         border-radius: 20px;
         padding: 40px;
@@ -129,217 +170,304 @@
         border: 1px solid #ced4da;
       }
       .kembali {
-        color: #1e2a3a;
+        color: #1e2a3a; /* Warna teks */
       }
 
       .custom-btn {
-        background-color: #1e2a3a; 
-        color: white; 
-        border: none; 
-        border-radius: 10px; 
-        padding: 10px 20px; 
-        font-weight: bold; 
+        background-color: #1e2a3a; /* Warna latar belakang */
+        color: white; /* Warna teks */
+        border: none; /* Tanpa border */
+        border-radius: 10px; /* Sudut melengkung */
+        padding: 10px 20px; /* Padding tombol */
+        font-weight: bold; /* Teks tebal */
       }
       .custom-btn:hover {
-        background-color: #2a3e50;
+        background-color: #2a3e50; /* Warna saat hover */
+      }
+
+      .form-label {
+        font-weight: 500;
       }
     </style>
   </head>
   <body>
-    <div class="sidebar d-flex flex-column justify-content-between p-3">
-      <div>
-        <!-- Logo -->
-        <div class="d-flex align-items-center justify-content-between mb-4">
-          <div class="d-flex align-items-center gap-2 logo-wrap">
-            <h5 class="logo-title mb-0">Quizku.</h5>
+    <div class="d-flex">
+      <div class="sidebar d-flex flex-column justify-content-between p-3">
+        <div>
+          <!-- Logo -->
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <div class="d-flex align-items-center gap-2 logo-wrap">
+              <h5 class="logo-title mb-0">Quizku.</h5>
+            </div>
+            <img
+              src="../../Gambar/icon/panah_kiri.svg"
+              alt="geser"
+              class="logo-geser"
+              id="geserSidebar"
+            />
           </div>
+
+          <!-- Menu -->
+          <nav class="nav flex-column">
+            <a href="../dashboard/dashboard.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/dashboard.svg"
+                class="sidebar-icon active"
+                alt="Dashboard"
+              />
+              <span>Dashboard</span>
+            </a>
+            <a
+              href="../kelola_pengguna/kelola_pengguna.html"
+              class="nav-link active"
+            >
+              <img
+                src="../../Gambar/icon/kelola_pengguna.svg"
+                class="sidebar-icon"
+                alt="Kelola Pengguna"
+              />
+              <span>Kelola Pengguna</span>
+            </a>
+            <a href="../Bank Soal/bank_soal.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/bank_soal.svg"
+                class="sidebar-icon"
+                alt="Bank Soal"
+              />
+              <span>Bank Soal</span>
+            </a>
+            <a href="../History Quis/history_kuis.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/history_quiz.svg"
+                class="sidebar-icon"
+                alt="Histori Quiz"
+              />
+              <span>Histori Quiz</span>
+            </a>
+            <a href="../Matakuliah/matakuliah.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/matakuliah.svg"
+                class="sidebar-icon"
+                alt="Matakuliah"
+              />
+              <span>Matakuliah</span>
+            </a>
+            <a href="../Dosen/dosen.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/dosen.svg"
+                class="sidebar-icon"
+                alt="Dosen"
+              />
+              <span>Dosen</span>
+            </a>
+            <a href="../Mahasiswa/mahasiswa.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/mahasiswa.svg"
+                class="sidebar-icon"
+                alt="Mahasiswa"
+              />
+              <span>Mahasiswa</span>
+            </a>
+            <a href="../Kelas/kelas.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/kelas.svg"
+                class="sidebar-icon"
+                alt="Kelas"
+              />
+              <span>Kelas</span>
+            </a>
+            <a href="../Pengaturan/pengaturan.html" class="nav-link">
+              <img
+                src="../../Gambar/icon/pengaturan.svg"
+                class="sidebar-icon"
+                alt="Pengaturan"
+              />
+              <span>Pengaturan</span>
+            </a>
+          </nav>
+        </div>
+        <div>
+          <!-- Garis -->
           <img
-            src="../../Gambar/icon/panah_kiri.svg"
-            alt="geser"
-            class="logo-geser"
-            id="geserSidebar"
+            class="line-icon"
+            alt="line"
+            src="../../Gambar/icon/Line 5.svg"
           />
-        </div>
 
-        <!-- Menu -->
-        <nav class="nav flex-column">
-          <a href="../dashboard/dashboard.html" class="nav-link active">
-            <img
-              src="../../Gambar/icon/dashboard.svg"
-              class="sidebar-icon active"
-              alt="Dashboard"
-            />
-            <span>Dashboard</span>
-          </a>
-          <a href="../kelola_pengguna/kelola_pengguna.html" class="nav-link">
-            <img
-              src="../../Gambar/icon/kelola_pengguna.svg"
-              class="sidebar-icon"
-              alt="Kelola Pengguna"
-            />
-            <span>Kelola Pengguna</span>
-          </a>
-          <a href="../Bank Soal/bank_soal.html" class="nav-link">
-            <img
-              src="../../Gambar/icon/bank_soal.svg"
-              class="sidebar-icon"
-              alt="Bank Soal"
-            />
-            <span>Bank Soal</span>
-          </a>
-          <a href="../History Quis/history_kuis.html" class="nav-link">
-            <img
-              src="../../Gambar/icon/history_quiz.svg"
-              class="sidebar-icon"
-              alt="Histori Quiz"
-            />
-            <span>Histori Quiz</span>
-          </a>
-          <a href="../Matakuliah/matakuliah.html" class="nav-link">
-            <img
-              src="../../Gambar/icon/matakuliah.svg"
-              class="sidebar-icon"
-              alt="Matakuliah"
-            />
-            <span>Matakuliah</span>
-          </a>
-          <a href="../Dosen/dosen.html" class="nav-link">
-            <img
-              src="../../Gambar/icon/dosen.svg"
-              class="sidebar-icon"
-              alt="Dosen"
-            />
-            <span>Dosen</span>
-          </a>
-          <a href="../Mahasiswa/mahasiswa.html" class="nav-link">
-            <img
-              src="../../Gambar/icon/mahasiswa.svg"
-              class="sidebar-icon"
-              alt="Mahasiswa"
-            />
-            <span>Mahasiswa</span>
-          </a>
-          <a href="../Kelas/kelas.html" class="nav-link">
-            <img
-              src="../../Gambar/icon/kelas.svg"
-              class="sidebar-icon"
-              alt="Kelas"
-            />
-            <span>Kelas</span>
-          </a>
-          <a href="../Pengaturan/pengaturan.html" class="nav-link">
-            <img
-              src="../../Gambar/icon/pengaturan.svg"
-              class="sidebar-icon"
-              alt="Pengaturan"
-            />
-            <span>Pengaturan</span>
-          </a>
-        </nav>
-      </div>
-      <div>
-        <!-- Garis -->
-        <img
-          class="line-icon"
-          alt="line"
-          src="../../Gambar/icon/Line 5.svg"
-        />
-
-        <!-- Profile -->
-        <div class="d-flex align-items-center mb-2">
-          <img src="Ellipse 8.png" alt="profile" class="profile-img me-2" />
-          <div class="profile-info">
-            <strong>Dominick</strong><br />
-            <small>dominick@gmail.com</small>
+          <!-- Profile -->
+          <div class="d-flex align-items-center mb-2">
+            <img id="profile-image" alt="profile" class="profile-img me-2" />
+            <div class="profile-info">
+              <strong id="profile-name"></strong><br />
+              <small id="profile-email"></small>
+            </div>
           </div>
+          <button
+            class="btn logout-btn d-flex align-items-center justify-content-center"
+            onclick="logout()"
+          >
+            <img
+              src="../../Gambar/icon/Logout.svg"
+              class="me-2"
+              style="width: 18px"
+              alt="Logout"
+            />
+            <span class="logout-text">Logout</span>
+          </button>
         </div>
-        <button
-          class="btn logout-btn d-flex align-items-center justify-content-center"
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <a
+          href="kelola_pengguna.html"
+          class="kembali text-decoration-none mb-3 d-inline-block"
+          >← Kembali</a
         >
-          <img
-            src="../../Gambar/icon/Logout.svg"
-            class="me-2"
-            style="width: 18px"
-            alt="Logout"
-          />
-          <span class="logout-text">Logout</span>
-        </button>
-      </div>
-    </div>
+        <h3 class="fw-bold mb-1">User Management</h3>
+        <p class="text-muted mb-4">
+          Create and manage user accounts for students, lecturers, and
+          administrators.
+        </p>
 
-    <div class="main-content">
-      <a
-        href="kelola_pengguna.html"
-        class="kembali text-decoration-none mb-3 d-inline-block"
-        >← Kembali</a
-      >
-      <h3 class="fw-bold mb-1">Edit User</h3>
-      <p class="text-muted mb-4">
-        Create and manage user accounts for students, lecturers, and
-        administrators.
-      </p>
-        <div class="form-container">
+        <div class="form-box">
           <form id="formEdit">
+            <!-- hidden input -->
+            <input type="hidden" id="id" />
             <div class="mb-3">
               <label for="nama" class="form-label">Nama</label>
               <input type="text" class="form-control" id="nama" required />
             </div>
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <input type="email" class="form-control" id="email" required />
+              <input type="email" class="form-control" id="email" readonly />
             </div>
-            <div class="mb-3">
-              <label for="role" class="form-label">Roles</label>
-              <select id="role" class="form-select">
-                <option value="mahasiswa">Mahasiswa</option>
-                <option value="dosen">Dosen</option>
-                <option value="admin">Admin</option>
-              </select>
+            <!-- <div class="mb-3">
+            <label for="role" class="form-label">Roles</label>
+            <select id="role" class="form-select">
+              <option value="mahasiswa">Mahasiswa</option>
+              <option value="dosen">Dosen</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div> -->
+            <div class="mb-4">
+              <label for="gambar" class="form-label">Gambar</label>
+              <input type="gambar" class="form-control" id="gambar" />
             </div>
             <div class="mb-4">
               <label for="password" class="form-label">Password</label>
               <input type="password" class="form-control" id="password" />
             </div>
-            <button type="submit" class="custom-btn w-100">
-              Simpan
-            </button>
+            <button type="submit" class="custom-btn w-100">Simpan</button>
           </form>
         </div>
       </div>
     </div>
-
     <script>
-      const pengguna = JSON.parse(localStorage.getItem("pengguna")) || [];
-      const index = localStorage.getItem("editIndex");
+      const geserBtn = document.getElementById("geserSidebar");
+      const sidebar = document.querySelector(".sidebar");
 
-      if (index === null) {
-        alert("Data pengguna tidak ditemukan.");
-        window.location.href = "kelola_pengguna.html";
+      let isCollapsed = false;
+
+      geserBtn.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+        isCollapsed = !isCollapsed;
+
+        geserBtn.src = isCollapsed
+          ? "../../Gambar/icon/panah_kanan.svg"
+          : "../../Gambar/icon/panah_kiri.svg";
+      });
+    </script>
+    <script src="../assets/custom.js"></script>
+    <script>
+      // Ambil URL saat ini
+      const urlParams = new URLSearchParams(window.location.search);
+
+      // Ambil nilai dari parameter tertentu, misalnya "id"
+      const email = urlParams.get("user-email");
+
+      function muatDataApi() {
+        $.ajax({
+          url: `${API_URL}/api-admin/users/${email}`,
+          type: "GET",
+          xhrFields: {
+            withCredentials: true,
+          },
+          success: function (response) {
+            console.log(response);
+            document.getElementById("id").value = response.data.id;
+            document.getElementById("nama").value = response.data.name;
+            document.getElementById("email").value = response.data.email;
+            document.getElementById("gambar").value = response.data.image;
+          },
+          error: function (xhr) {
+            if (xhr.status === 401) {
+              refreshAccessToken(muatDataApi);
+            } else if (xhr.status === 400) {
+              window.location.href = "/index.html";
+            } else if (xhr.status == 404) {
+              alert("Data tidak ditemukan!");
+              window.location.href = "kelola_pengguna.html";
+            }
+            console.error("Error memuat data:", xhr);
+          },
+        });
       }
 
-      const data = pengguna[index];
-      document.getElementById("nama").value = data.nama;
-      document.getElementById("email").value = data.email;
-      document.getElementById("role").value = data.role;
-      document.getElementById("password").value = data.password || "";
+      $(document).ready(function () {
+        muatDataApi();
+        const token = $.cookie("token");
+        let data = decodeJWT(token);
+        if (data.role != "admin") {
+          window.location.href = "http://127.0.0.1:5500/index.html";
+        }
 
-      document
-        .getElementById("formEdit")
-        .addEventListener("submit", function (e) {
+        $("#formEdit").submit(function (e) {
           e.preventDefault();
 
-          pengguna[index] = {
-            nama: document.getElementById("nama").value,
-            email: document.getElementById("email").value,
-            role: document.getElementById("role").value,
-            password: document.getElementById("password").value,
-            created: data.created,
+          const userId = $("#id").val();
+          const name = $("#nama").val();
+          const email = $("#email").val();
+          const password = $("#password").val();
+          const image = $("#gambar").val();
+
+          const userData = {
+            id: parseInt(userId),
+            email: email,
+            name: name,
+            password: password,
+            image: image,
           };
 
-          localStorage.setItem("pengguna", JSON.stringify(pengguna));
-          localStorage.removeItem("editIndex");
-          window.location.href = "kelola_pengguna.html";
+          function updateUserData() {
+            $.ajax({
+              url: `${API_URL}/api-admin/users`,
+              type: "PUT",
+              xhrFields: {
+                withCredentials: true,
+              },
+              contentType: "application/json",
+              data: JSON.stringify(userData),
+
+              success: function (response) {
+                console.log("Update berhasil!", response);
+                alert("Update berhasil");
+                window.location.href = "kelola_pengguna.html";
+              },
+              error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                  refreshAccessToken(updateUserData);
+                } else if (xhr.status === 400) {
+                  window.location.href = "/index.html";
+                }
+                alert("Update gagal");
+              },
+            });
+          }
+
+          updateUserData();
         });
+      });
     </script>
   </body>
 </html>

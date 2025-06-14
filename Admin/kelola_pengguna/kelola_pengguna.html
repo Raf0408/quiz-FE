@@ -7,6 +7,9 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <style>
       body {
         background-color: #f1f5f9;
@@ -21,15 +24,36 @@
       .sidebar {
         background-color: #1d2d44;
         color: white;
-        height: 100vh;
+        min-height: 150vh;
         width: 250px;
         border-right: 2px solid #e2e8f0;
         transition: width 0.3s ease;
         flex-shrink: 0;
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
-        padding: 1rem;
+      }
+
+      .sidebar > div:first-of-type {
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        overflow: hidden;
+        min-height: 0;
+      }
+
+      .sidebar
+        > div:first-of-type
+        > .d-flex.align-items-center.justify-content-between {
+        flex-shrink: 0;
+      }
+
+      .sidebar .nav.flex-column {
+        flex-grow: 1;
+        overflow-y: auto;
+      }
+
+      .sidebar > div:last-of-type {
+        flex-shrink: 0;
       }
 
       .sidebar.collapsed {
@@ -296,14 +320,15 @@
 
           <!-- Profile -->
           <div class="d-flex align-items-center mb-2">
-            <img src="Ellipse 8.png" alt="profile" class="profile-img me-2" />
+            <img id="profile-image" alt="profile" class="profile-img me-2" />
             <div class="profile-info">
-              <strong>Dominick</strong><br />
-              <small>dominick@gmail.com</small>
+              <strong id="profile-name"></strong><br />
+              <small id="profile-email"></small>
             </div>
           </div>
           <button
             class="btn logout-btn d-flex align-items-center justify-content-center"
+            onclick="logout()"
           >
             <img
               src="../../Gambar/icon/Logout.svg"
@@ -376,90 +401,181 @@
           : "../../Gambar/icon/panah_kiri.svg";
       });
     </script>
+    <script src="../assets/custom.js"></script>
     <script>
-      // Hapus data saat reload
-      window.onload = () => {
-        sessionStorage.removeItem("dataPengguna");
-      };
-
+      // Data pengguna disimpan pada variabel sesi, bukan localStorage
       let dataPengguna = [];
 
+      // Fungsi untuk inisialisasi data sampel
       function inisialisasiDataSampel() {
+        // Membuat beberapa data pengguna contoh
         return [
           {
-            nama: "John Doe",
+            name: "John Doe",
             email: "john@example.com",
             role: "admin",
-            password: "password123",
-            created: new Date().toLocaleDateString("id-ID"),
+            created_at: new Date().toLocaleDateString("id-ID"),
           },
         ];
       }
 
+      function muatDataApi() {
+        return $.ajax({
+          url: `${API_URL}/api-admin/users`,
+          type: "GET",
+          xhrFields: {
+            withCredentials: true,
+          },
+          success: function (response) {
+            dataPengguna = [];
+
+            response["data"].forEach((element) => {
+              dataPengguna.push(element);
+            });
+
+            sessionStorage.setItem(
+              "dataPengguna",
+              JSON.stringify(dataPengguna)
+            );
+          },
+
+          error: function (xhr) {
+            if (xhr.status === 401) {
+              refreshAccessToken(muatDataApi);
+            } else if (xhr.status === 400) {
+              window.location.href = "/index.html";
+            }
+            console.error("Error memuat data:", xhr);
+          },
+        });
+      }
+
+      // Fungsi untuk memuat data pengguna dan menampilkan di tabel
       function muatDataPengguna() {
         const tbody = document.getElementById("daftarPengguna");
-        const cari = document.getElementById("cari").value.toLowerCase();
-        const filterRole = document.getElementById("filterRole").value;
+        const cari = document.getElementById("cari")?.value.toLowerCase() || "";
+        const filterRole =
+          document.getElementById("filterRole")?.value || "all";
+
+        if (!tbody) return; // Pastikan elemen tbody ada
 
         tbody.innerHTML = "";
 
         dataPengguna.forEach((user, index) => {
           const matchRole = filterRole === "all" || user.role === filterRole;
           const matchSearch =
-            user.nama.toLowerCase().includes(cari) ||
+            user.name.toLowerCase().includes(cari) ||
             user.email.toLowerCase().includes(cari);
 
           if (matchRole && matchSearch) {
             const tr = document.createElement("tr");
 
             tr.innerHTML = `
-            <td class="d-flex align-items-center">
-              <img src="https://i.pravatar.cc/150?img=${
-                index + 10
-              }" class="avatar" alt="User">
-              <div>
-                <div class="fw-semibold">${user.nama}</div>
-                <div class="text-muted small">${user.email}</div>
-              </div>
-            </td>
-            <td><span class="badge text-capitalize">${user.role}</span></td>
-            <td>${user.created}</td>
-            <td>
-              <span class="action-icon edit" onclick="editPengguna(${index})">
-                <img src="../../Gambar/icon/edit.svg" alt="edit">
-              </span>
-              <span class="action-icon delete" onclick="hapusPengguna(${index})">
-                <img src="../../Gambar/icon/delete.svg" alt="delete">
-              </span>
-            </td>
-          `;
+              <td class="d-flex align-items-center">
+                  <img src="${API_URL}/assets/image/${user.image}" class="avatar" alt="User">
+                  <div>
+                      <div class="fw-semibold">${user.name}</div>
+                      <div class="text-muted small">${user.email}</div>
+                  </div>
+              </td>
+              <td><span class="badge text-capitalize">${user.role}</span></td>
+              <td>${user.created_at}</td>
+              <td>
+                  <a href="edit_user.html?user-email=${user.email}" class="text-decoration-none">
+                    <span class="action-icon edit" onclick="editPengguna(${index})">
+                      <img src="../../Gambar/icon/edit.svg" alt="edit">
+                    </span>
+                  </a>  
+                  <span class="action-icon delete" onclick="hapusPengguna(${index})">
+                    <img src="../../Gambar/icon/delete.svg" alt="delete">
+                  </span>
+              </td>
+            `;
             tbody.appendChild(tr);
           }
         });
       }
 
-      function hapusPengguna(index) {
+      // Fungsi untuk menghapus pengguna
+      function hapusPengguna(index, userId) {
         if (confirm("Yakin ingin menghapus pengguna ini?")) {
-          dataPengguna.splice(index, 1);
-          muatDataPengguna();
+          $.ajax({
+            url: `${API_URL}/api-admin/users/${userId}`,
+            type: "DELETE",
+            xhrFields: {
+              withCredentials: true,
+            },
+            success: function (response) {
+              dataPengguna.splice(index, 1);
+              muatDataPengguna();
+            },
+
+            error: function (xhr) {
+              if (xhr.status === 401) {
+                refreshAccessToken(hapusPengguna);
+              } else if (xhr.status === 400) {
+                window.location.href = "/index.html";
+              }
+              console.error("Error memuat data:", xhr);
+            },
+          });
         }
       }
 
-      function editPengguna(index) {
-        sessionStorage.setItem("editIndex", index);
-        window.location.href = "edit_user.html";
-      }
+      // Inisialisasi event listener saat halaman dimuat
+      document.addEventListener("DOMContentLoaded", function () {
+        muatDataApi()
+          .then(function () {
+            const dataFromSession = sessionStorage.getItem("dataPengguna");
+            if (dataFromSession) {
+              dataPengguna = JSON.parse(dataFromSession);
+            } else {
+              // Jika tidak ada data, gunakan data sampel
+              dataPengguna = inisialisasiDataSampel();
+              // Simpan ke sessionStorage untuk navigasi antar halaman
+              sessionStorage.setItem(
+                "dataPengguna",
+                JSON.stringify(dataPengguna)
+              );
+            }
 
-      document.addEventListener("DOMContentLoaded", () => {
-        dataPengguna = inisialisasiDataSampel();
-        muatDataPengguna();
+            // Filter dan pencarian di halaman index
+            document
+              .getElementById("filterRole")
+              ?.addEventListener("change", muatDataPengguna);
+            document
+              .getElementById("cari")
+              ?.addEventListener("input", muatDataPengguna);
 
-        document
-          .getElementById("filterRole")
-          .addEventListener("change", muatDataPengguna);
-        document
-          .getElementById("cari")
-          .addEventListener("input", muatDataPengguna);
+            // Form tambah pengguna
+            document
+              .getElementById("formTambahPengguna")
+              ?.addEventListener("submit", tambahPengguna);
+
+            // Form edit pengguna
+            document
+              .getElementById("formEditPengguna")
+              ?.addEventListener("submit", updatePengguna);
+
+            // Jika berada di halaman edit, load data untuk edit
+            if (window.location.href.includes("edit_user.html")) {
+              loadEditForm();
+            }
+
+            // Load data pengguna jika berada di halaman index
+            if (document.getElementById("daftarPengguna")) {
+              muatDataPengguna();
+            }
+          })
+          .catch(function (error) {
+            console.error("Terjadi kesalahan saat memuat data API:", error);
+          });
+
+        const token = $.cookie("token");
+        let data = decodeJWT(token);
+        if (data.role != "admin") {
+          window.location.href = "http://127.0.0.1:5500/index.html";
+        }
       });
     </script>
   </body>
