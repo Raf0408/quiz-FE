@@ -83,7 +83,7 @@
         >
           <div class="login-box">
             <h3 class="text-center fw-bold mb-4">Login</h3>
-            <p id="message"></p>
+            <p id="message center"></p>
             <div class="mb-3">
               <input
                 id="email"
@@ -112,85 +112,18 @@
               >
                 Login
               </button>
-              <button
+              <!-- <button
                 name="fetch"
                 class="btn btn-light fw-bold"
                 onclick="fetchProtectedData()"
               >
                 fetchProtectedData
-              </button>
+              </button> -->
             </div>
           </div>
         </div>
       </div>
     </div>
   </body>
-  <script>
-    const API_URL = "http://192.168.207.13:8080";
-
-    // Fungsi login
-    function login() {
-      let email = $("#email").val();
-      let password = $("#password").val();
-      console.log(email);
-
-      $.ajax({
-        url: `${API_URL}/login`,
-        type: "POST",
-        xhrFields: {
-          withCredentials: true,
-        },
-        contentType: "application/json",
-        data: JSON.stringify({ email, password }),
-        success: function (response) {
-          document.cookie = `token=${response.data.access_token}; path=/;`;
-          // window.location.href =
-          //   "http://127.0.0.1:5500/Admin/dasboard/dahsboard.html";
-        },
-        error: function () {
-          $("#message").text("Login gagal!");
-          console.error("refresh token stil valid");
-        },
-      });
-    }
-
-    // Fungsi untuk request API dengan access token
-    function fetchProtectedData() {
-      $.ajax({
-        url: `${API_URL}/api/status-login`,
-        type: "GET",
-        xhrFields: {
-          withCredentials: true,
-        },
-        success: function (response) {
-          console.log("Data:", response);
-        },
-        error: function (xhr) {
-          if (xhr.status === 401) {
-            refreshAccessToken();
-          }
-        },
-      });
-    }
-
-    // Fungsi refresh access token
-    function refreshAccessToken() {
-      $.ajax({
-        url: `${API_URL}/refresh-token`,
-        type: "POST",
-        contentType: "application/json",
-        // data: JSON.stringify({ refreshToken }),
-        xhrFields: {
-          withCredentials: true,
-        },
-        success: function (response) {
-          document.cookie = `token=${response.data.access_token}; path=/;`;
-          fetchProtectedData();
-        },
-        error: function () {
-          console.log("Gagal memperbarui token, silakan login ulang.");
-        },
-      });
-    }
-  </script>
+  <script src="../assets/custom.js"></script>
 </html>
