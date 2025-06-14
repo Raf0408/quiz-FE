@@ -3,16 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Admin - History Quiz</title>
+    <title>Admin - Pengaturan</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <style>
-      body {
+     body {
         background-color: #f1f5f9;
         font-family: "Segoe UI", sans-serif;
         margin: 0;
@@ -25,36 +22,15 @@
       .sidebar {
         background-color: #1d2d44;
         color: white;
-        min-height: 150vh;
+        height: 100vh;
         width: 250px;
         border-right: 2px solid #e2e8f0;
         transition: width 0.3s ease;
         flex-shrink: 0;
         display: flex;
         flex-direction: column;
-      }
-
-      .sidebar > div:first-of-type {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        overflow: hidden;
-        min-height: 0;
-      }
-
-      .sidebar
-        > div:first-of-type
-        > .d-flex.align-items-center.justify-content-between {
-        flex-shrink: 0;
-      }
-
-      .sidebar .nav.flex-column {
-        flex-grow: 1;
-        overflow-y: auto;
-      }
-
-      .sidebar > div:last-of-type {
-        flex-shrink: 0;
+        justify-content: space-between;
+        padding: 1rem;
       }
 
       .sidebar.collapsed {
@@ -155,7 +131,6 @@
         gap: 0.5rem;
       }
 
-      /* Main content mengambil sisa ruang */
       .main-content {
         flex-grow: 1;
         padding: 40px;
@@ -180,7 +155,7 @@
       .drag-atau-masukan-foto-disini-wrapper {
         align-self: stretch;
         border-radius: 8px;
-        border: 1px solid #000;
+        border: 1px solid #b1acac;
         box-sizing: border-box;
         height: 225px;
         display: flex;
@@ -202,7 +177,7 @@
       .masukan-password-baru-wrapper {
         align-self: stretch;
         border-radius: 8px;
-        border: 1px solid #000;
+        border: 1px solid #b1acac;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -210,34 +185,28 @@
         padding: 10px;
         color: #919191;
       }
-      .simpan {
-        position: relative;
-        font-weight: 600;
+      .custom-btn {
+        background-color: #1e2a3a; 
+        color: white; 
+        border: none; 
+        border-radius: 10px; 
+        padding: 10px 20px;
+        font-weight: bold;
       }
-      .button-create {
-        align-self: stretch;
-        border-radius: 6px;
-        background-color: #1d2d44;
-        height: 57px;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-        box-sizing: border-box;
-        cursor: pointer;
-        font-size: 16px;
-        color: #fff;
+      .custom-btn:hover {
+        background-color: #2a3e50; 
       }
       .frame-group {
-        width: auto;
-        box-shadow: -34px 69px 22px rgba(0, 0, 0, 0),
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+        box-shadow: -34px 69px 22px rgba(141, 139, 139, 0),
           -22px 44px 20px rgba(0, 0, 0, 0.01),
           -12px 25px 17px rgba(0, 0, 0, 0.05),
           -5px 11px 12px rgba(0, 0, 0, 0.09), -1px 3px 7px rgba(0, 0, 0, 0.1);
         border-radius: 14px;
         background-color: #fff;
-        border: 1px solid #000;
+        border: 1px solid #b1acac;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -247,40 +216,10 @@
         gap: 70px;
         font-size: 15px;
       }
-      .frame-parent {
-        align-self: stretch;
-        flex: 1;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding: 25px 30px;
-        gap: 210px;
-        font-size: 40px;
-        color: #1d2d44;
-      }
-      .admin-pengaturan {
-        width: 100%;
-        position: relative;
-        background-color: #f1f4f5;
-        height: 1117px;
-        overflow: hidden;
-        display: flex;
-        flex-direction: row;
-        align-items: flex-start;
-        justify-content: flex-start;
-        gap: 1px;
-        text-align: left;
-        font-size: 15px;
-        color: #f1f4f5;
-        font-family: Poppins;
-      }
     </style>
   </head>
   <body>
     <div class="d-flex">
-      <!-- Sidebar -->
       <div class="sidebar d-flex flex-column justify-content-between p-3">
         <div>
           <!-- Logo -->
@@ -402,7 +341,6 @@
           </button>
         </div>
       </div>
-
       <!-- Main Content -->
       <div class="flex-grow-1 p-4 main-content">
         <div class="mb-4">
@@ -414,29 +352,32 @@
             <div class="pengaturan-parent">
               <div class="ubah-foto-profil-parent">
                 <b class="ubah-foto-profil">Ubah foto profil</b>
-                <div class="drag-atau-masukan-foto-disini-wrapper">
-                  <div class="drag-atau-masukan">
-                    Drag atau Masukan foto disini
-                  </div>
-                </div>
+                <label for="fotoProfil" class="drag-atau-masukan-foto-disini-wrapper">
+                  <input type="file" name="fotoProfil" id="fotoProfil" accept="image/*" hidden />
+                  <div class="drag-atau-masukan" id="previewText">Drag atau Masukan foto disini</div>
+                </label>
               </div>
+              
               <div class="ubah-foto-profil-parent">
                 <b class="ubah-foto-profil">Ubah password</b>
                 <div class="masukan-password-baru-wrapper">
-                  <div class="drag-atau-masukan">Masukan password baru</div>
+                  <input
+                    type="password"
+                    name="passwordBaru"
+                    class="form-control border-0"
+                    placeholder="Masukkan password baru"
+                    style="outline: none; box-shadow: none;"
+                  />
                 </div>
-              </div>
+              </div>   
             </div>
-            <div class="button-create" id="buttonCreateContainer">
-              <div class="simpan">Simpan</div>
+              <button class="custom-btn w-100">Simpan</button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- Sidebar Geser Script -->
-    <script src="../assets/custom.js"></script>
+     <script src="../assets/custom.js"></script>
     <script>
       const geserBtn = document.getElementById("geserSidebar");
       const sidebar = document.querySelector(".sidebar");
