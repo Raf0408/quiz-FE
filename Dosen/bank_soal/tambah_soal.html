@@ -8,6 +8,10 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
     <style>
       /* Styles dipertahankan seperti semula */
       body {
@@ -217,50 +221,60 @@
             >
               <h5 class="fw-bold mb-1">Informasi soal</h5>
               <p class="text-muted mb-4">Masukkan informasi detail soal</p>
-              <form>
-                <div class="mb-3">
-                  <label for="namaSoal" class="form-label fw-semibold"
-                    >Nama Soal</label
-                  >
-                  <input
-                    type="text"
-                    class="form-control"
-                    id="namaSoal"
-                    placeholder="Nama Soal"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="jumlahSoal" class="form-label fw-semibold"
-                    >Jumlah Soal</label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="jumlahSoal"
-                    placeholder="Jumlah Soal"
-                  />
-                </div>
-                <div class="mb-3">
-                  <label for="waktuPengerjaan" class="form-label fw-semibold"
-                    >Waktu Pengerjaan</label
-                  >
-                  <input
-                    type="number"
-                    class="form-control"
-                    id="waktuPengerjaan"
-                    placeholder="Waktu Pengerjaan"
-                  />
-                </div>
-                <div class="mb-4">
-                  <label for="tanggalDibuat" class="form-label fw-semibold"
-                    >Tanggal Dibuat</label
-                  >
-                  <input type="date" class="form-control" id="tanggalDibuat" />
-                </div>
-                <button type="submit" class="custom-btn w-100">
-                  Selanjutnya
-                </button>
-              </form>
+              <!-- <form> -->
+              <div class="mb-3">
+                <label for="namaSoal" class="form-label fw-semibold"
+                  >Nama Soal</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="namaSoal"
+                  placeholder="Nama Soal"
+                />
+                <input type="hidden" class="form-control" id="courseCode" />
+              </div>
+              <div class="mb-3">
+                <label for="jumlahSoal" class="form-label fw-semibold"
+                  >Jumlah Soal</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="jumlahSoal"
+                  placeholder="Jumlah Soal"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="waktuPengerjaan" class="form-label fw-semibold"
+                  >Waktu Pengerjaan</label
+                >
+                <input
+                  type="number"
+                  class="form-control"
+                  id="waktuPengerjaan"
+                  placeholder="Waktu Pengerjaan"
+                />
+              </div>
+              <div class="mb-4">
+                <label for="tanggalDibuat" class="form-label fw-semibold"
+                  >Tanggal Dibuat</label
+                >
+                <input
+                  type="date"
+                  class="form-control"
+                  id="tanggalDibuat"
+                  readonly
+                />
+              </div>
+              <button
+                type="submit"
+                id="btnSelanjutnya"
+                class="custom-btn w-100"
+              >
+                Selanjutnya
+              </button>
+              <!-- </form> -->
             </div>
 
             <!-- DAFTAR SOAL SECTION -->
@@ -355,6 +369,7 @@
       </div>
     </div>
 
+    <script src="../../Admin/assets/custom.js"></script>
     <!-- Script Load Sidebar -->
     <script>
       document.addEventListener("DOMContentLoaded", function () {
@@ -392,37 +407,52 @@
                 link.classList.remove("active");
               }
             });
+
+            const token = $.cookie("token");
+            let dataToken = decodeJWT(token);
+            if (dataToken.role != "dosen") {
+              window.location.href = "http://127.0.0.1:5500/index.html";
+            }
           });
       });
     </script>
     <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        document.querySelector("form").addEventListener("submit", function (e) {
-          e.preventDefault(); // Mencegah reload halaman
+      // document.addEventListener("DOMContentLoaded", function () {
+      //   document.querySelector("form").addEventListener("submit", function (e) {
+      //     e.preventDefault(); // Mencegah reload halaman
 
-          // Ambil data dari form
-          const nama = document.getElementById("namaSoal").value;
-          const jumlah = document.getElementById("jumlahSoal").value;
-          const waktu = document.getElementById("waktuPengerjaan").value;
-          const tanggal = document.getElementById("tanggalDibuat").value;
+      //     // Ambil data dari form
+      //     const nama = document.getElementById("namaSoal").value;
+      //     const jumlah = document.getElementById("jumlahSoal").value;
+      //     const waktu = document.getElementById("waktuPengerjaan").value;
+      //     const tanggal = document.getElementById("tanggalDibuat").value;
+      //     const kodeKuis = document.getElementById("courseCode").value;
 
-          // Buat objek soal
-          const soal = { nama, jumlah, waktu, tanggal };
+      //     // Buat objek soal
+      //     const soal = { nama, jumlah, waktu, tanggal };
 
-          // Simpan ke sessionStorage (sementara)
-          sessionStorage.setItem("soalBaru", JSON.stringify(soal));
+      //     // Simpan ke sessionStorage (sementara)
+      //     sessionStorage.setItem("soalBaru", JSON.stringify(soal));
 
-          // Redirect ke halaman bank soal
-          window.location.href = "buat_soal.html";
-        });
-      });
+      //     // Redirect ke halaman bank soal
+      //     window.location.href = "buat_soal.html";
+      //   });
+      // });
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const paramValue = urlParams.get("courseCode");
+        document.getElementById("courseCode").value = paramValue;
+
         const btnInfo = document.getElementById("btnInfo");
         const btnDaftar = document.getElementById("btnDaftar");
         const infoSection = document.getElementById("infoSection");
         const daftarSection = document.getElementById("daftarSection");
+        const btnSelanjutnya = document.getElementById("btnSelanjutnya");
+
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("tanggalDibuat").value = today;
 
         btnInfo.addEventListener("click", function () {
           infoSection.style.display = "block";
@@ -431,6 +461,15 @@
           btnInfo.classList.remove("btn", "btn-light", "text-dark");
           btnDaftar.classList.remove("custom-btn");
           btnDaftar.classList.add("btn", "btn-light", "text-dark");
+        });
+
+        btnSelanjutnya.addEventListener("click", function () {
+          infoSection.style.display = "none";
+          daftarSection.style.display = "block";
+          btnDaftar.classList.add("custom-btn");
+          btnDaftar.classList.remove("btn", "btn-light", "text-dark");
+          btnInfo.classList.remove("custom-btn");
+          btnInfo.classList.add("btn", "btn-light", "text-dark");
         });
 
         btnDaftar.addEventListener("click", function () {
@@ -445,11 +484,88 @@
     </script>
     <script>
       document.addEventListener("DOMContentLoaded", function () {
+        let jumlah = 3;
+
+        document
+          .getElementById("jumlahSoal")
+          .addEventListener("input", function () {
+            jumlah = parseInt(this.value, 10);
+            console.log(`jumlah berubah: ${jumlah}`);
+          });
+
         const btnTambah = document.getElementById("btnTambahPertanyaan");
-        const daftarSoalList = document.getElementById("daftarSoalList");
-        let nomorUrut = 1; // Mulai dari soal 1
+        let nomorUrutState = { nomorUrut: 1 };
+
+        const handler = {
+          set(target, key, value) {
+            console.log(`nomorUrut berubah: ${target[key]} → ${value}`);
+            target[key] = value;
+
+            if (value > jumlah) {
+              btnTambah.innerHTML = "Simpan";
+            } else {
+              btnTambah.innerHTML = "Tambah Pertanyaan";
+            }
+          },
+        };
+
+        const state = new Proxy(nomorUrutState, handler);
+        const soal = []; // Array untuk menyimpan soal
 
         btnTambah.addEventListener("click", function () {
+          const isiTombol = btnTambah.innerHTML;
+
+          if (isiTombol === "Simpan") {
+            // Ambil data dari form
+            const nama = document.getElementById("namaSoal").value;
+            const jumlah = document.getElementById("jumlahSoal").value;
+            const waktu = document.getElementById("waktuPengerjaan").value;
+            const tanggal = document.getElementById("tanggalDibuat").value;
+            const kodeKuis = document.getElementById("courseCode").value;
+            let dataSoal = [];
+
+            soal.forEach((item) => {
+              dataSoal.push(item);
+            });
+
+            const dataQuestions = {
+              name: nama,
+              question_count: parseInt(jumlah),
+              duration: parseInt(waktu),
+              course_code: kodeKuis,
+              question_detail: dataSoal,
+            };
+
+            console.log(dataQuestions);
+
+            $.ajax({
+              url: `${API_URL}/api-lecturer/questions`,
+              type: "POST",
+              xhrFields: {
+                withCredentials: true,
+              },
+              contentType: "application/json",
+              data: JSON.stringify(dataQuestions),
+              success: function (response) {
+                console.log("Tambah data berhasil!", response);
+                alert("Tambah data berhasil");
+                window.location.href = "bank_soal.html";
+              },
+              error: function (xhr, status, error) {
+                if (xhr.status === 401) {
+                  refreshAccessToken(tambahData);
+                } else if (xhr.status === 400) {
+                  window.location.href = "/index.html";
+                }
+                console.log("Tambah data gagal!", error);
+                alert("Tambah data gagal");
+                window.location.href = "bank_soal.html";
+              },
+            });
+
+            return;
+          }
+
           const pertanyaanText = document
             .getElementById("pertanyaan")
             .value.trim();
@@ -464,6 +580,7 @@
             (radio) => radio.checked
           );
 
+          // Validasi input
           if (
             pertanyaanText === "" ||
             Array.from(pilihanInputs).some(
@@ -477,18 +594,24 @@
             return;
           }
 
-          // Buat daftar jawaban dengan penanda (✔) pada jawaban benar
+          // Simpan pertanyaan dan jawaban ke dalam array soal
           const jawabanPilihan = Array.from(pilihanInputs).map(
-            (input, index) => {
-              const label = String.fromCharCode(65 + index); // A, B, C, D
-              const isJawabanBenar =
-                index === selectedJawaban
-                  ? " <span style='color:green'>✔</span>"
-                  : "";
-              return `<li><strong>${label}:</strong> ${input.value}${isJawabanBenar}</li>`;
-            }
+            (input, index) => ({
+              choice: String.fromCharCode(65 + index).toLowerCase(),
+              answer_text: input.value,
+              benar: index === selectedJawaban,
+            })
           );
 
+          const jawabanBenar = jawabanPilihan[selectedJawaban]?.choice || null;
+
+          soal.push({
+            correct_answer: jawabanBenar,
+            question_text: pertanyaanText,
+            answers: jawabanPilihan,
+          });
+
+          // Tambahkan soal ke tampilan daftar
           const soalBaru = document.createElement("div");
           soalBaru.classList.add(
             "p-3",
@@ -498,10 +621,23 @@
             "bg-light"
           );
           soalBaru.innerHTML = `
-          <h6 class="fw-bold mb-1">Soal ${nomorUrut}</h6>
-          <p class="mb-2"><strong>Pertanyaan:</strong> ${pertanyaanText}</p>
-          <ul>${jawabanPilihan.join("")}</ul>
-        `;
+              <h6 class="fw-bold mb-1">Soal ${state.nomorUrut}</h6>
+              <p class="mb-2"><strong>Pertanyaan:</strong> ${pertanyaanText}</p>
+              <ul>
+                  ${jawabanPilihan
+                    .map(
+                      (jawaban) =>
+                        `<li><strong>${jawaban.choice}:</strong> ${
+                          jawaban.answer_text
+                        }${
+                          jawaban.benar
+                            ? " <span style='color:green'>✔</span>"
+                            : ""
+                        }</li>`
+                    )
+                    .join("")}
+              </ul>
+          `;
 
           daftarSoalList.appendChild(soalBaru);
 
@@ -510,7 +646,7 @@
           pilihanInputs.forEach((input) => (input.value = ""));
           radioInputs.forEach((radio) => (radio.checked = false));
 
-          nomorUrut++;
+          state.nomorUrut++;
         });
       });
     </script>
