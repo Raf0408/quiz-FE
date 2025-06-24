@@ -2,7 +2,7 @@
 <html lang="id">
   <head>
     <meta charset="UTF-8" />
-    <title>Tambah User</title>
+    <title>Tambah Pengguna</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -218,7 +218,7 @@
         >
           ← Kembali
         </a>
-        <h6 class="quizresult">Quiz Results</h6>
+        <h6 class="quizresult">Hasil Kuis</h6>
         <h3 class="fw-bold mb-1" id="courseName">-</h3>
         <p class="text-muted" id="quizDetail">-</p>
         <div class="search-container">
@@ -240,21 +240,21 @@
               <span
                 class="tab-link active-tab me-4"
                 onclick="showTab('overview')"
-                >Overview</span
+                >Gambaran Umum</span
               >
               <span class="tab-link me-4" onclick="showTab('student')"
-                >Student Result</span
+                >Hasil Mahasiswa</span
               >
             </div>
             <div>
               <span class="badge bg-secondary me-2" id="totalStudent"
-                >- Students</span
+                >- Mahasiswa</span
               >
               <span class="badge bg-secondary me-2" id="completionRate"
-                >- Completion Rate</span
+                >- Tingkat Penyelesaian</span
               >
-              <span class="badge bg-secondary" id="averageScore"
-                >- Average Score</span
+              <span class="badge bg-secondary" id="averageNilai"
+                >- Nilai Rata-Rata</span
               >
             </div>
           </div>
@@ -263,42 +263,42 @@
           <div id="overviewTab">
             <div class="row text-center mb-4">
               <div class="col-md-3">
-                <div class="stat-card text-center" id="cardAverageScore">
-                  Average Score<br /><strong>-</strong>
+                <div class="stat-card text-center" id="cardAverageNilai">
+                  Nilai Rata-Rata<br /><strong>-</strong>
                 </div>
               </div>
               <div class="col-md-3">
-                <div class="stat-card text-center" id="cardHighestScore">
-                  Highest Score<br /><strong>-</strong>
+                <div class="stat-card text-center" id="cardHighestNilai">
+                  Nilai Tertinggi<br /><strong>-</strong>
                 </div>
               </div>
               <div class="col-md-3">
-                <div class="stat-card text-center" id="cardLowestScore">
-                  Lowest Score<br /><strong>-</strong>
+                <div class="stat-card text-center" id="cardLowestNilai">
+                  Nilai Terendah<br /><strong>-</strong>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="stat-card text-center" id="cardCompletionRate">
-                  Completion Rate<br /><strong>-</strong>
+                  Tingkat Penyelesaian<br /><strong>-</strong>
                 </div>
               </div>
             </div>
             <div class="text-center border p-4 rounded">
-              <h5>Attempts Analysis</h5>
+              <h5>Analisis</h5>
               <div class="row mt-3">
                 <div class="col">
-                  <div class="stat-card text-center" id="cardTotalStudents">
-                    Total Students<br /><strong>-</strong>
+                  <div class="stat-card text-center" id="cardTotalMahasiswa">
+                    Total Mahasiswa<br /><strong>-</strong>
                   </div>
                 </div>
                 <div class="col">
-                  <div class="stat-card text-center" id="cardCompleted">
-                    Completed<br /><strong>-</strong>
+                  <div class="stat-card text-center" id="cardSelesai">
+                    Selesai<br /><strong>-</strong>
                   </div>
                 </div>
                 <div class="col">
-                  <div class="stat-card text-center" id="cardIncompleted">
-                    Incompleted<br /><strong>-</strong>
+                  <div class="stat-card text-center" id="cardBelum Selesai">
+                    Belum Selesai<br /><strong>-</strong>
                   </div>
                 </div>
               </div>
@@ -310,9 +310,9 @@
             <table class="table table-striped mt-3" id="studentTable">
               <thead>
                 <tr>
-                  <th>User</th>
-                  <th>Class</th>
-                  <th>Score</th>
+                  <th>Pengguna</th>
+                  <th>Kelas</th>
+                  <th>Nilai</th>
                   <th>Status</th>
                 </tr>
               </thead>
@@ -368,39 +368,38 @@
               "courseName"
             ).innerHTML = `${response["data"]["course_name"]}`;
             document.getElementById("quizDetail").innerHTML = `
-              ${response["data"]["quiz_name"]} • Created on ${response["data"]["created_at"]} • ${response["data"]["question_count"]} questions • ${response["data"]["duration"]} min
-          time limit
+              ${response["data"]["quiz_name"]} • Dibuat pada ${response["data"]["created_at"]} • ${response["data"]["question_count"]} pertanyaan • Batas waktu ${response["data"]["duration"]} menit
             `;
             document.getElementById(
               "totalStudent"
-            ).innerHTML = `${response["data"]["student_count"]} Students`;
+            ).innerHTML = `${response["data"]["student_count"]} Mahasiswa`;
             document.getElementById(
               "completionRate"
-            ).innerHTML = `${response["data"]["completion_rate"]}% Completion Rate`;
+            ).innerHTML = `${response["data"]["completion_rate"]}% Tingkat Penyelesaian`;
             document.getElementById(
-              "averageScore"
-            ).innerHTML = `${response["data"]["avarage_score"]}% Average Score`;
+              "averageNilai"
+            ).innerHTML = `${response["data"]["avarage_score"]}% Nilai Rata-Rata`;
             document.getElementById(
-              "cardAverageScore"
-            ).innerHTML = `Average Score<br /><strong>${response["data"]["avarage_score"]}%</strong>`;
+              "cardAverageNilai"
+            ).innerHTML = `Nilai Rata-Rata<br /><strong>${response["data"]["avarage_score"]}%</strong>`;
             document.getElementById(
-              "cardLowestScore"
-            ).innerHTML = `Lowest Score<br /><strong>${response["data"]["lowest_score"]}%</strong>`;
+              "cardLowestNilai"
+            ).innerHTML = `Nilai Terendah<br /><strong>${response["data"]["lowest_score"]}%</strong>`;
             document.getElementById(
-              "cardHighestScore"
-            ).innerHTML = `Highest Score<br /><strong>${response["data"]["highest_score"]}%</strong>`;
+              "cardHighestNilai"
+            ).innerHTML = `Nilai Tertinggi<br /><strong>${response["data"]["highest_score"]}%</strong>`;
             document.getElementById(
               "cardCompletionRate"
-            ).innerHTML = `Completion Rate<br /><strong>${response["data"]["completion_rate"]}%</strong>`;
+            ).innerHTML = `Tingkat Penyelesaian<br /><strong>${response["data"]["completion_rate"]}%</strong>`;
             document.getElementById(
-              "cardTotalStudents"
-            ).innerHTML = `Total Students<br /><strong>${response["data"]["student_count"]}</strong>`;
+              "cardTotalMahasiswa"
+            ).innerHTML = `Total Mahasiswa<br /><strong>${response["data"]["student_count"]}</strong>`;
             document.getElementById(
-              "cardCompleted"
-            ).innerHTML = `Completed<br /><strong>${response["data"]["user_complete_count"]}</strong>`;
+              "cardSelesai"
+            ).innerHTML = `Selesai<br /><strong>${response["data"]["user_complete_count"]}</strong>`;
             document.getElementById(
-              "cardIncompleted"
-            ).innerHTML = `Incompleted<br /><strong>${response["data"]["user_incomplete_count"]}</strong>`;
+              "cardBelum Selesai"
+            ).innerHTML = `Belum Selesai<br /><strong>${response["data"]["user_incomplete_count"]}</strong>`;
 
             tbody = document.getElementById("listStudent");
             tbody.innerHTML = "";
@@ -410,7 +409,7 @@
 
               tr.innerHTML = `
               <td>${user.name}<br /><small>${user.email}</small></td>
-              <td>Class ${user.class_name}</td>
+              <td>Kelas ${user.class_name}</td>
               <td>${user.score} (${user.score}%)</td>
               <td>${
                 user.status === "lulus"
