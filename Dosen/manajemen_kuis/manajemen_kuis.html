@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dosen - Manajemen Quiz</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      /* Styles dipertahankan seperti semula */
+      body {
+        background-color: #f1f5f9;
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+      }
+      .container-flex {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background-color: #1d2d44;
+        color: white;
+        height: 100vh;
+        width: 250px;
+        border-right: 2px solid #e2e8f0;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+      }
+
+      .sidebar.collapsed {
+        width: 80px;
+      }
+
+      .sidebar .nav-link {
+        color: #f1f4f5;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #334155;
+        color: white;
+      }
+
+      .sidebar .nav-link span {
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.collapsed .nav-link span,
+      .sidebar.collapsed .logout-text,
+      .sidebar.collapsed .logo-title,
+      .sidebar.collapsed .profile-info {
+        display: none !important;
+      }
+
+      .sidebar.collapsed .nav-link {
+        justify-content: center;
+      }
+
+      .sidebar.collapsed .logout-btn {
+        width: auto;
+        padding: 0.5rem;
+        justify-content: center;
+      }
+
+      .active {
+        background-color: #334155;
+        color: #fff;
+        border-radius: 10px;
+      }
+
+      .line-icon {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .profile-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .logout-btn {
+        background-color: #f1f4f5;
+        color: #1d2d44;
+        border-radius: 5px;
+        width: 100%;
+        transition: width 0.3s ease;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .logout-btn:hover {
+        background-color: #e2e8f0;
+      }
+
+      .sidebar-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .logo-geser {
+        width: 15px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-title {
+        font-size: 1.25rem;
+        transition: opacity 0.3s ease;
+        margin: 0;
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        overflow: hidden;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+        background-color: #f1f5f9;
+        margin-left: 250px;
+      }
+      h2 {
+        font-weight: 700;
+        font-size: 1.75rem;
+      }
+
+      .btn.btn-outline-secondary.active {
+        background-color: #1d2d44;
+        color: #fff;
+        border-color: #1d2d44;
+      }
+
+      .btn.btn-outline-secondary {
+        border-radius: 8px;
+      }
+
+      .custom-btn {
+        background-color: #1e2a3a;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+      }
+      .custom-btn:hover {
+        background-color: #2a3e50;
+      }
+      /* Gaya untuk search bar agar mirip gambar */
+      .search-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .search-bar {
+        background-color: #ffffff;
+        border-radius: 999px;
+        padding: 8px 20px;
+        display: flex;
+        align-items: center;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        min-width: 220px;
+        height: 42px;
+      }
+
+      .search-bar img {
+        width: 16px;
+        opacity: 0.6;
+      }
+
+      .search-bar input {
+        border: none;
+        outline: none;
+        box-shadow: none;
+        background-color: transparent;
+        font-size: 14px;
+        color: #1e293b;
+        margin-left: 10px;
+        width: 100%;
+      }
+
+      .search-bar input::placeholder {
+        color: #94a3b8;
+        font-size: 14px;
+      }
+
+      .btn-sm {
+        padding: 0.25rem 0.6rem;
+      }
+
+      .card-title {
+        font-size: 1rem;
+        font-weight: 600;
+      }
+
+      .quiz-card .badge {
+        font-size: 0.7rem;
+      }
+
+      .quiz-card .btn-sm img {
+        margin-right: 4px;
+      }
+      .quiz-card-box {
+        background-color: white;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 15px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Sidebar akan dimuat di sini -->
+    <div class="container-flex">
+      <!-- Sidebar -->
+      <div id="sidebar-container"></div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <div>
+            <h2>Manajemen Quiz</h2>
+            <p class="text-muted">
+              Buat, kelola, dan tetapkan kuis untuk mahasiswa Anda.
+            </p>
+          </div>
+          <div class="search-wrapper">
+            <div class="search-bar">
+              <img
+                src="../../Gambar/icon/mynaui_search.svg"
+                alt="Search Icon"
+              />
+              <input type="text" placeholder="Search" />
+            </div>
+            <button
+              class="custom-btn"
+              onclick="window.location.href='../../Dosen/manajemen_kuis/buat_kuis.html'"
+            >
+              + Buat Kuis
+            </button>
+          </div>
+        </div>
+
+        <div class="mb-4 d-flex gap-2">
+          <button
+            class="btn btn-outline-secondary active"
+            data-target="tab-all"
+          >
+            All Quiz
+          </button>
+          <button class="btn btn-outline-secondary" data-target="tab-active">
+            Active Quiz
+          </button>
+          <button class="btn btn-outline-secondary" data-target="tab-archived">
+            Archived
+          </button>
+        </div>
+
+        <!-- Kontainer semua konten -->
+        <div id="tab-content">
+          <!-- All Quiz -->
+          <div class="quiz-tab" id="tab-all">
+            <!-- Ulangi div card sesuai jumlah kuis -->
+            <div class="quiz-card-box">
+              <h6 class="fw-bold mb-1">Fundamental Layanan Web</h6>
+              <small class="text-muted d-block mb-1">Layanan Web</small>
+              <small class="text-muted d-flex align-items-center gap-1 mb-1">
+                <img
+                  src="../../Gambar/icon/tanggal.svg"
+                  alt="calendar"
+                  width="14"
+                />
+                Dibuat pada 21 Maret 2025
+              </small>
+              <small class="text-muted d-flex align-items-center gap-1 mb-1">
+                31 Siswa yang ditugaskan
+              </small>
+              <small class="text-muted d-flex align-items-center gap-1 mb-3">
+                10 Soal
+              </small>
+              <div class="d-flex justify-content-between">
+                <button
+                  class="btn btn-outline-dark btn-sm d-flex align-items-center"
+                >
+                  Edit
+                </button>
+                <button
+                  class="custom-btn btn-sm d-flex align-items-center"
+                  onclick="window.location.href='../../Dosen/manajemen_kuis/lihat_detail.html'"
+                >
+                  Lihat Hasil
+                </button>
+              </div>
+            </div>
+            <div class="quiz-card-box">
+              <h6 class="fw-bold mb-0">Backend Quiz</h6>
+              <p class="text-muted mb-2">Layanan Web</p>
+              <div
+                class="d-flex align-items-center flex-wrap gap-3 mb-3 text-muted small"
+              >
+                <span class="d-flex align-items-center gap-1">
+                  <img
+                    src="../../Gambar/icon/proicons_person.svg"
+                    alt="users"
+                    width="14"
+                  />
+                  23 Mahasiswa
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                  <img
+                    src="../../Gambar/icon/tanggal.svg"
+                    alt="calendar"
+                    width="14"
+                  />
+                  Dibuat pada 21 Maret 2025
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                  <img
+                    src="../../Gambar/icon/soal.svg"
+                    alt="question"
+                    width="14"
+                  />
+                  10 Soal
+                </span>
+              </div>
+              <div class="d-flex justify-content-end gap-2">
+                <button
+                  class="custom-btn btn-sm d-flex align-items-center gap-1"
+                >
+                  Lihat Hasil
+                </button>
+                <button class="btn btn-sm d-flex align-items-center gap-1">
+                  <img src="../../Gambar/icon/edit.svg" alt="edit" width="14" />
+                </button>
+                <button class="btn btn-sm d-flex align-items-center gap-1">
+                  <img
+                    src="../../Gambar/icon/delete.svg"
+                    alt="delete"
+                    width="14"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Active Quiz -->
+          <div class="quiz-tab d-none" id="tab-active">
+            <div class="quiz-card-box">
+              <h6 class="fw-bold mb-1">Fundamental Layanan Web</h6>
+              <small class="text-muted d-block mb-1">Layanan Web</small>
+              <small class="text-muted d-flex align-items-center gap-1 mb-1">
+                <img
+                  src="../../Gambar/icon/tanggal.svg"
+                  alt="calendar"
+                  width="14"
+                />
+                Dibuat pada 21 Maret 2025
+              </small>
+              <small class="text-muted d-flex align-items-center gap-1 mb-1">
+                31 Siswa yang ditugaskan
+              </small>
+              <small class="text-muted d-flex align-items-center gap-1 mb-3">
+                10 Soal
+              </small>
+              <div class="d-flex justify-content-between">
+                <button
+                  class="btn btn-outline-dark btn-sm d-flex align-items-center"
+                >
+                  Edit
+                </button>
+                <button class="custom-btn btn-sm d-flex align-items-center">
+                  Lihat Hasil
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Archived Quiz -->
+          <div class="quiz-tab d-none" id="tab-archived">
+            <div class="quiz-card-box">
+              <h6 class="fw-bold mb-0">Backend Quiz</h6>
+              <p class="text-muted mb-2">Layanan Web</p>
+              <div
+                class="d-flex align-items-center flex-wrap gap-3 mb-3 text-muted small"
+              >
+                <span class="d-flex align-items-center gap-1">
+                  <img
+                    src="../../Gambar/icon/proicons_person.svg"
+                    alt="users"
+                    width="14"
+                  />
+                  23 Mahasiswa
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                  <img
+                    src="../../Gambar/icon/tanggal.svg"
+                    alt="calendar"
+                    width="14"
+                  />
+                  Dibuat pada 21 Maret 2025
+                </span>
+                <span class="d-flex align-items-center gap-1">
+                  <img
+                    src="../../Gambar/icon/soal.svg"
+                    alt="question"
+                    width="14"
+                  />
+                  10 Soal
+                </span>
+              </div>
+              <div class="d-flex justify-content-end gap-2">
+                <button
+                  class="custom-btn btn-sm d-flex align-items-center gap-1"
+                >
+                  Lihat Hasil
+                </button>
+                <button class="btn btn-sm d-flex align-items-center gap-1">
+                  <img src="../../Gambar/icon/edit.svg" alt="edit" width="14" />
+                </button>
+                <button class="btn btn-sm d-flex align-items-center gap-1">
+                  <img
+                    src="../../Gambar/icon/delete.svg"
+                    alt="delete"
+                    width="14"
+                  />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Script Load Sidebar -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("../sidebar.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("sidebar-container").innerHTML = data;
+
+            // Sidebar geser
+            const geserBtn = document.getElementById("geserSidebar");
+            const sidebar = document.querySelector(".sidebar");
+
+            if (geserBtn && sidebar) {
+              let isCollapsed = false;
+              geserBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+                isCollapsed = !isCollapsed;
+
+                geserBtn.src = isCollapsed
+                  ? "../../Gambar/icon/panah_kanan.svg"
+                  : "../../Gambar/icon/panah_kiri.svg";
+              });
+            }
+
+            // active sidebar
+            const currentPath = window.location.pathname.split("/").pop();
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            navLinks.forEach((link) => {
+              const linkPath = link.getAttribute("href").split("/").pop();
+
+              if (currentPath === linkPath) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+          });
+      });
+    </script>
+    <script>
+      document.querySelectorAll(".btn-outline-secondary").forEach((btn) => {
+        btn.addEventListener("click", function () {
+          // Ubah tombol aktif
+          document
+            .querySelectorAll(".btn-outline-secondary")
+            .forEach((b) => b.classList.remove("active"));
+          this.classList.add("active");
+
+          // Sembunyikan semua tab
+          document
+            .querySelectorAll(".quiz-tab")
+            .forEach((tab) => tab.classList.add("d-none"));
+
+          // Tampilkan tab sesuai target
+          const targetId = this.getAttribute("data-target");
+          document.getElementById(targetId).classList.remove("d-none");
+        });
+      });
+    </script>
+  </body>
+</html>
