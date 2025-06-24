@@ -34,6 +34,9 @@ function login() {
       } else if (data.role === "dosen") {
         window.location.href =
           "http://127.0.0.1:5500/Dosen/dashboard/dashboard.html";
+      } else if (data.role === "mahasiswa") {
+        window.location.href =
+          "http://127.0.0.1:5500/mahasiswa/matakuliah/matakuliah.html";
       }
     },
     error: function (xhr) {
@@ -118,7 +121,9 @@ function decodeJWT(token) {
   );
 
   const data = JSON.parse(jsonPayload);
-  document.getElementById("profile-name").innerHTML = data.name;
+  document.getElementById("profile-name").innerHTML = `${toTitleCase(
+    data.name
+  )}`;
   document.getElementById("profile-email").innerHTML = data.email;
   document.getElementById("profile-image").src =
     "http://127.0.0.1:8080/assets/image/" + data.image;
@@ -137,4 +142,17 @@ function formatDate(dateParam) {
   });
 
   return formattedDate;
+}
+
+function toTitleCase(str) {
+  return str
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
+}
+
+function formatDurasi(totalMenit) {
+  const jam = Math.floor(totalMenit / 60);
+  const menit = totalMenit % 60;
+  return `${jam} Jam ${menit} Menit`;
 }
