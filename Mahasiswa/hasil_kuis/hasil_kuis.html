@@ -8,6 +8,9 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <style>
       /* Styles dipertahankan seperti semula */
       body {
@@ -271,94 +274,68 @@
                     <th>Action</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr>
-                    <td>Fundamental Layanan Web</td>
-                    <td>Layanan Web</td>
-                    <td>25 April 2025</td>
-                    <td>85% (85/100)</td>
-                    <td>
-                      <span
-                        class="badge rounded-pill"
-                        style="background-color: #e6f4ea; color: #1e8e3e"
-                      >
-                        Lulus
-                      </span>
-                    </td>
-                    <td>
-                      <button 
-                        class="btn btn-dark btn-sm" 
-                        onclick="lihatHasil('fundamental-web', '85')">
-                        Lihat hasil
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>UI UX Layanan Web</td>
-                    <td>Layanan Web</td>
-                    <td>25 April 2025</td>
-                    <td>89% (89/100)</td>
-                    <td>
-                      <span
-                        class="badge rounded-pill"
-                        style="background-color: #e6f4ea; color: #1e8e3e"
-                      >
-                        Lulus
-                      </span>
-                    </td>
-                    <td>
-                      <a href="lihat_hasil.html" class="btn btn-dark btn-sm"
-                        >Lihat hasil</a
-                      >
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Database Management</td>
-                    <td>Layanan Web</td>
-                    <td>25 April 2025</td>
-                    <td>45% (45/100)</td>
-                    <td>
-                      <span
-                        class="badge rounded-pill"
-                        style="background-color: #fce8e8; color: #d93025"
-                      >
-                        Gagal
-                      </span>
-                    </td>
-                    <td>
-                      <a href="lihat_hasil.html" class="btn btn-dark btn-sm"
-                        >Lihat hasil</a
-                      >
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Frontend Quiz</td>
-                    <td>Layanan Web</td>
-                    <td>25 April 2025</td>
-                    <td>40% (40/100)</td>
-                    <td>
-                      <span
-                        class="badge rounded-pill"
-                        style="background-color: #fce8e8; color: #d93025"
-                      >
-                        Gagal
-                      </span>
-                    </td>
-                    <td>
-                      <a href="lihat_hasil.html" class="btn btn-dark btn-sm"
-                        >Lihat hasil</a
-                      >
-                    </td>
-                  </tr>
-                </tbody>
+                <tbody id="content"></tbody>
               </table>
             </div>
           </div>
         </div>
       </div>
 
+      <script src="../../Admin/assets/custom.js"></script>
       <!-- Script Load Sidebar -->
       <script>
+        function muatDataApi() {
+          return $.ajax({
+            url: `${API_URL}/api-student/quizzes/history`,
+            type: "GET",
+            xhrFields: {
+              withCredentials: true,
+            },
+            success: function (response) {
+              const body = document.getElementById("content");
+              response.data.forEach((item) => {
+                const content = `
+                <tr>
+                  <td>${item.quiz_name}</td>
+                  <td>${item.course_name}</td>
+                  <td>${item.created_at}</td>
+                  <td>${item.score}% (${item.score}/100)</td>
+                  <td>
+                    <span class="badge rounded-pill" style="
+                      background-color: ${
+                        item.status === "lulus" ? "#e6f4ea" : "#fce8e8"
+                      };
+                      color: ${item.status === "lulus" ? "#1e8e3e" : "#d93025"};
+                    ">
+                      ${item.status === "lulus" ? "Lulus" : "Gagal"}
+                    </span>  
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-dark btn-sm"
+                      onclick="lihatHasil(${item.id})"
+                    >
+                      Lihat hasil
+                    </button>
+                  </td>
+                </tr>`;
+
+                body.innerHTML += content;
+              });
+              console.log(response.data);
+            },
+            error: function (xhr) {
+              if (xhr.status === 401) {
+                refreshAccessToken(muatDataApi);
+              } else if (xhr.status === 400) {
+                window.location.href = "/index.html";
+              }
+
+              console.error("Error memuat data:", xhr);
+            },
+          });
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
           fetch("../sidebar.html")
             .then((response) => response.text())
@@ -394,7 +371,15 @@
                   link.classList.remove("active");
                 }
               });
+
+              const token = $.cookie("token");
+              let dataToken = decodeJWT(token);
+              if (dataToken.role != "mahasiswa") {
+                window.location.href = "http://127.0.0.1:5500/index.html";
+              }
             });
+
+          muatDataApi();
         });
       </script>
     </div>
@@ -403,15 +388,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
       // Tambahkan setelah script yang sudah ada
-      function lihatHasil(quizId, nilaiQuiz) {
-        // Menyimpan data quiz ke sessionStorage
-        sessionStorage.setItem('quizData', JSON.stringify({
-          id: quizId,
-          nilai: nilaiQuiz
-        }));
-        
+      function lihatHasil(quizResultId) {
         // Redirect ke halaman lihat hasil
-        window.location.href = 'lihat_hasil.html';
+        window.location.href = `lihat_hasil.html?quizResult=${quizResultId}`;
       }
     </script>
   </body>

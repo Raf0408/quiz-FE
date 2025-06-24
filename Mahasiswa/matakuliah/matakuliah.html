@@ -8,6 +8,9 @@
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
     />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <style>
       body {
         background-color: #f1f5f9;
@@ -22,7 +25,7 @@
       .sidebar {
         background-color: #1d2d44;
         color: white;
-        height: 100vh;
+        min-height: 120vh;
         width: 250px;
         border-right: 2px solid #e2e8f0;
         transition: width 0.3s ease;
@@ -183,9 +186,8 @@
       .card-title {
         position: absolute;
         top: 32px;
-        left: 32px;
+        left: 20px;
         font-size: 24px;
-        font-weight: 500;
         color: white;
         margin: 0;
         line-height: 1.2;
@@ -193,10 +195,10 @@
       }
 
       /* Updated styles for the last card */
-      .course-card:last-child {
+      /* .course-card:last-child {
         grid-column: 1 / 2;
         margin-top: 24px;
-      }
+      } */
 
       /* Updated color styles with slightly lighter shades */
       .course-card.pink {
@@ -224,38 +226,52 @@
         <div class="content-header mb-4">
           <div>
             <h2>Daftar Mata Kuliah</h2>
-            <p class="text-muted">
-              Create and manage user accounts for students, lecturers, and
-              administrators.
-            </p>
+            <p class="text-muted">Daftar matakuliah</p>
           </div>
           <div class="search-container">
             <input type="search" class="search-input" placeholder="Search" />
           </div>
         </div>
 
-        <div class="course-grid">
-          <a href="konfirmasi_kuis.html" class="course-card pink">
-            <h3 class="card-title">Layanan Web</h3>
-          </a>
-          <a href="konfirmasi_kuis.html" class="course-card purple">
-            <h3 class="card-title">Rekayasa Perangkat Lunak</h3>
-          </a>
-          <a href="konfirmasi_kuis.html" class="course-card orange">
-            <h3 class="card-title">Sistem Pendukung Keputusan</h3>
-          </a>
-          <a href="konfirmasi_kuis.html" class="course-card green">
-            <h3 class="card-title">Metodologi Penelitian</h3>
-          </a>
-          <a href="konfirmasi_kuis.html" class="course-card pink">
-            <h3 class="card-title">Rekayasa Sistem</h3>
-          </a>
-        </div>
+        <div class="course-grid" id="content"></div>
       </div>
     </div>
 
+    <script src="../../Admin/assets/custom.js"></script>
     <!-- Sidebar Geser Script -->
     <script>
+      function muatDataApi() {
+        return $.ajax({
+          url: `${API_URL}/api-student/courses-by-user`,
+          type: "GET",
+          xhrFields: {
+            withCredentials: true,
+          },
+          success: function (response) {
+            const colors = ["pink", "purple", "orange", "green"];
+            const body = document.getElementById("content");
+            response.data.forEach((item) => {
+              const randomColor =
+                colors[Math.floor(Math.random() * colors.length)];
+              content = `<a href="konfirmasi_kuis.html?courseName=${item.course_code}" class="course-card ${randomColor}">
+                <h3 class="card-title">${item.name}</h3>
+              </a>`;
+              body.innerHTML += content;
+            });
+            console.log(response.data);
+          },
+          error: function (xhr) {
+            if (xhr.status === 401) {
+              refreshAccessToken(muatDataApi);
+            } else if (xhr.status === 400) {
+              window.location.href = "/index.html";
+            }
+
+            console.error("Error memuat data:", xhr);
+          },
+        });
+      }
+
       document.addEventListener("DOMContentLoaded", function () {
         fetch("../sidebar.html")
           .then((response) => response.text())
@@ -291,7 +307,14 @@
                 link.classList.remove("active");
               }
             });
+
+            const token = $.cookie("token");
+            let dataToken = decodeJWT(token);
+            if (dataToken.role != "mahasiswa") {
+              window.location.href = "http://127.0.0.1:5500/index.html";
+            }
           });
+        muatDataApi();
       });
     </script>
   </body>
