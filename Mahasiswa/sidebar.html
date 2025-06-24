@@ -43,15 +43,15 @@
   <div>
     <img class="line-icon" alt="line" src="../../Gambar/icon/Line 5.svg" />
     <div class="d-flex align-items-center mb-2">
-      <img src="Ellipse 8.png" alt="profile" class="profile-img me-2" />
+      <img id="profile-image" alt="profile" class="profile-img me-2" />
       <div class="profile-info">
-        <strong>Dominick</strong><br />
-        <small>dominick@gmail.com</small>
+        <strong id="profile-name"></strong><br />
+        <small id="profile-email"></small>
       </div>
     </div>
     <button
       class="btn logout-btn d-flex align-items-center justify-content-center"
-      onclick="window.location.href='../login/login.html'"
+      onclick="logout()"
     >
       <img
         src="../../Gambar/icon/Logout.svg"

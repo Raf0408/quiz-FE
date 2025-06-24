@@ -168,6 +168,7 @@
         padding: 10px;
         text-align: center;
         color: #919191;
+        cursor: pointer;
       }
       .ubah-foto-profil-parent {
         align-self: stretch;
@@ -230,47 +231,95 @@
           <p class="text-muted">
             Yuk, kita lihat sekilas tentang sistem aplikasi kuis kamu
           </p>
-          <div class="frame-group">
-            <div class="pengaturan-parent">
-              <div class="ubah-foto-profil-parent">
-                <b class="ubah-foto-profil">Ubah foto profil</b>
-                <label
-                  for="fotoProfil"
-                  class="drag-atau-masukan-foto-disini-wrapper"
-                >
-                  <input
-                    type="file"
-                    name="fotoProfil"
-                    id="fotoProfil"
-                    accept="image/*"
-                    hidden
-                  />
-                  <div class="drag-atau-masukan" id="previewText">
-                    Drag atau Masukan foto disini
+          <form id="formEdit">
+            <div class="frame-group">
+              <div class="pengaturan-parent">
+                <div class="ubah-foto-profil-parent">
+                  <b class="ubah-foto-profil">Ubah foto profil</b>
+                  <label
+                    for="gambar"
+                    class="drag-atau-masukan-foto-disini-wrapper"
+                  >
+                    <input
+                      type="file"
+                      name="gambar"
+                      id="gambar"
+                      accept="image/*"
+                      hidden
+                    />
+                    <div class="drag-atau-masukan" id="previewText">
+                      Drag atau Masukan foto disini
+                    </div>
+                  </label>
+                </div>
+                <div class="ubah-foto-profil-parent">
+                  <b class="ubah-foto-profil">Ubah password</b>
+                  <div class="masukan-password-baru-wrapper">
+                    <input
+                      type="password"
+                      name="passwordBaru"
+                      class="form-control border-0"
+                      placeholder="Masukkan password baru"
+                      style="outline: none; box-shadow: none"
+                      id="password"
+                    />
                   </div>
-                </label>
-              </div>
-              <div class="ubah-foto-profil-parent">
-                <b class="ubah-foto-profil">Ubah password</b>
-                <div class="masukan-password-baru-wrapper">
-                  <input
-                    type="password"
-                    name="passwordBaru"
-                    class="form-control border-0"
-                    placeholder="Masukkan password baru"
-                    style="outline: none; box-shadow: none"
-                  />
                 </div>
               </div>
+              <button class="custom-btn w-100" type="submit">Simpan</button>
             </div>
-            <button class="custom-btn w-100">Simpan</button>
-          </div>
+          </form>
         </div>
       </div>
     </div>
     <script src="../../Admin/assets/custom.js"></script>
     <!-- Sidebar Geser Script -->
     <script>
+      $("#formEdit").submit(function (e) {
+        e.preventDefault();
+
+        const token = $.cookie("token");
+        const data = decodeJWT(token);
+        const password = $("#password").val();
+        const gambarInput = $("#gambar")[0];
+
+        const formData = new FormData();
+        formData.append("email", data.email);
+        formData.append("name", data.name);
+        formData.append("password", password);
+        if (gambarInput && gambarInput.files && gambarInput.files.length > 0) {
+          formData.append("image", gambarInput.files[0]);
+        }
+
+        function updateUserData() {
+          $.ajax({
+            url: `${API_URL}/api/update-user`,
+            type: "PUT",
+            xhrFields: {
+              withCredentials: true,
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              console.log("Update berhasil!", response);
+              alert("Update berhasil");
+              window.location.href = "pengaturan.html";
+            },
+            error: function (xhr, status, error) {
+              if (xhr.status === 401) {
+                refreshAccessToken(updateUserData);
+              } else if (xhr.status === 400) {
+                window.location.href = "pengaturan.html";
+              }
+              alert("Update gagal");
+            },
+          });
+        }
+
+        updateUserData();
+      });
+
       document.addEventListener("DOMContentLoaded", function () {
         fetch("../sidebar.html")
           .then((response) => response.text())
@@ -313,6 +362,27 @@
               window.location.href = "http://127.0.0.1:5500/index.html";
             }
           });
+
+        // Preview gambar atau nama file
+        const gambarInput = document.getElementById("gambar");
+        const previewText = document.getElementById("previewText");
+
+        gambarInput.addEventListener("change", function () {
+          const file = this.files[0];
+          if (file) {
+            if (file.type.startsWith("image/")) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                previewText.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 200px; border-radius: 4px;" />`;
+              };
+              reader.readAsDataURL(file);
+            } else {
+              previewText.textContent = file.name;
+            }
+          } else {
+            previewText.textContent = "Drag atau Masukan foto disini";
+          }
+        });
       });
     </script>
   </body>
