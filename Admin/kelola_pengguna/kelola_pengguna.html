@@ -351,7 +351,7 @@
 
         <div class="d-flex justify-content-end mb-2">
           <a href="tambah_user.html" class="custom-btn text-decoration-none"
-            >+ Tambah User</a
+            >+ Tambah Pengguna</a
           >
         </div>
 
@@ -364,7 +364,7 @@
             placeholder="Search..."
           />
           <select id="filterRole">
-            <option value="all">All Roles</option>
+            <option value="all">Semua Role</option>
             <option value="mahasiswa">Mahasiswa</option>
             <option value="dosen">Dosen</option>
             <option value="admin">Admin</option>
@@ -375,10 +375,10 @@
           <table class="table align-middle">
             <thead>
               <tr>
-                <th>User</th>
+                <th>Pengguna</th>
                 <th>Role</th>
-                <th>Created</th>
-                <th>Action</th>
+                <th>Dibuat</th>
+                <th>Aksi</th>
               </tr>
             </thead>
             <tbody id="daftarPengguna"></tbody>
@@ -472,7 +472,7 @@
 
             tr.innerHTML = `
               <td class="d-flex align-items-center">
-                  <img src="${API_URL}/assets/image/${user.image}" class="avatar" alt="User">
+                  <img src="${API_URL}/assets/image/${user.image}" class="avatar" alt="Pengguna">
                   <div>
                       <div class="fw-semibold">${user.name}</div>
                       <div class="text-muted small">${user.email}</div>
@@ -486,7 +486,7 @@
                       <img src="../../Gambar/icon/edit.svg" alt="edit">
                     </span>
                   </a>  
-                  <span class="action-icon delete" onclick="hapusPengguna(${index})">
+                  <span class="action-icon delete" onclick="hapusPengguna(${index},${user.id})">
                     <img src="../../Gambar/icon/delete.svg" alt="delete">
                   </span>
               </td>
@@ -514,7 +514,7 @@
               if (xhr.status === 401) {
                 refreshAccessToken(hapusPengguna);
               } else if (xhr.status === 400) {
-                window.location.href = "/index.html";
+                window.location.href = "kelola_pengguna.html";
               }
               console.error("Error memuat data:", xhr);
             },
