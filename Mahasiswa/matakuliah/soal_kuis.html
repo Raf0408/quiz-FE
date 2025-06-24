@@ -472,54 +472,72 @@
       // Fungsi baru untuk mengirimkan jawaban
       function handleQuizSubmission() {
         // Minta konfirmasi dari user
-        if (
-          !confirm(
-            "Apakah Anda yakin ingin menyelesaikan dan mengirimkan jawaban kuis ini?"
-          )
-        ) {
-          return; // Batalkan jika user menekan 'Cancel'
+        const unansweredQuestions = userAnswers.filter(
+          (answer) => answer === null
+        ).length;
+        let confirmationMessage =
+          "Apakah Anda yakin ingin menyelesaikan dan mengirimkan jawaban kuis ini?";
+        if (unansweredQuestions > 0) {
+          confirmationMessage += `\n\nPerhatian: Masih ada ${unansweredQuestions} soal yang belum Anda jawab.`;
+        }
+        if (!confirm(confirmationMessage)) {
+          return;
         }
 
-        console.log("Jawaban yang akan dikirim:", userAnswers);
+        // Buat array untuk menampung jawaban yang akan dikirim
+        const answersToSend = [];
 
-        // Persiapkan data yang akan dikirim (payload)
-        // Backend mungkin mengharapkan format tertentu, sesuaikan jika perlu
+        // Loop melalui setiap jawaban pengguna
+        userAnswers.forEach((userChoice, questionIndex) => {
+          // Hanya proses soal yang sudah dijawab
+          if (userChoice !== null) {
+            const question = quizData.question_items[questionIndex];
+            const selectedChoiceObject = question.choice_items.find(
+              (item) => item.choice === userChoice
+            );
+
+            // Ambil 'answer_id' (sekarang sudah ada di data API)
+            if (selectedChoiceObject && selectedChoiceObject.answer_id) {
+              answersToSend.push({
+                answer_id: selectedChoiceObject.answer_id,
+              });
+            }
+          }
+        });
+
+        // Susun payload akhir
         const submissionData = {
-          answers: userAnswers.map((answer, index) => {
-            // Sesuaikan format jika backend butuh question_id
-            return {
-              // question_id: quizData.question_items[index].id, // Jika ada ID soal
-              answer: answer,
-            };
-          }),
+          user_answers: answersToSend,
         };
 
-        // Kirim data menggunakan AJAX (jQuery)
         const submitButton = document.getElementById("btn-next");
         submitButton.disabled = true;
         submitButton.textContent = "Mengirim...";
 
-        // GANTI URL INI dengan endpoint API untuk submit
-        const submitUrl = `${API_URL}/api-student/quizzes/${quizId}/finish`;
+        // Endpoint API untuk submit jawaban
+        const submitUrl = `${API_URL}/api-student/quizzes/answer/${quizId}`;
+
+        console.log("Endpoint:", submitUrl);
+        console.log(
+          "Data yang akan dikirim:",
+          JSON.stringify(submissionData, null, 2)
+        );
 
         $.ajax({
           url: submitUrl,
           type: "POST",
-          contentType: "application/json", // Penting untuk mengirim data JSON
-          data: JSON.stringify(submissionData), // Ubah data ke format JSON string
+          contentType: "application/json",
+          data: JSON.stringify(submissionData),
           xhrFields: {
             withCredentials: true,
           },
           success: function (response) {
-            // Jika berhasil, tampilkan pesan dan arahkan ke halaman hasil
-            alert(
-              "Kuis berhasil diserahkan! Anda akan diarahkan ke halaman hasil."
-            );
-            // GANTI URL INI dengan halaman hasil kuis Anda
-            window.location.href = `/halaman-hasil-kuis.html?attempt_id=${response.data.attempt_id}`;
+            alert("Kuis berhasil diserahkan!");
+            // Arahkan ke halaman lain jika perlu
+            window.location.href = `/mahasiswa/hasil_kuis/hasil_kuis.html`;
+            console.log("Submit berhasil:", response);
           },
           error: function (xhr) {
-            // Jika gagal, tampilkan pesan error dan aktifkan kembali tombol
             alert(
               "Terjadi kesalahan saat mengirim jawaban. Silakan coba lagi."
             );
