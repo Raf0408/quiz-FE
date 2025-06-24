@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kuis Layanan Web</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <style>
+      body {
+        background-color: #f8fafc;
+        min-height: 100vh;
+      }
+
+      .header {
+        background-color: #1d2d44;
+        color: white;
+        padding: 16px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .header .timer {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        color: #94a3b8;
+      }
+
+      .timer .time {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 4px 12px;
+        border-radius: 20px;
+      }
+
+      .quiz-sidebar {
+        background-color: #475569;
+        border-radius: 12px;
+        padding: 24px;
+        margin-bottom: 24px;
+      }
+
+      .info-box {
+        background-color: #475569;
+        border-radius: 16px;
+        padding: 28px;
+        margin-bottom: 24px;
+      }
+
+      .info-box h6 {
+        color: white;
+        font-size: 20px;
+        margin-bottom: 24px;
+        text-align: center;
+      }
+
+      .info-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 16px;
+        margin-bottom: 20px;
+        color: #e2e8f0;
+      }
+
+      .info-item:last-child {
+        margin-bottom: 0;
+      }
+
+      .info-item img {
+        width: 20px;
+        height: 20px;
+        opacity: 0.7;
+      }
+
+      .info-item div {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .info-item div span:first-child {
+        color: white;
+        font-weight: 500;
+        font-size: 14px;
+        margin-bottom: 4px;
+      }
+
+      .info-item div span:last-child {
+        color: #94a3b8;
+        font-size: 13px;
+      }
+
+      .question-box {
+        background-color: #1e293b;
+        border-radius: 12px;
+        padding: 24px;
+      }
+
+      .question-box h6 {
+        color: white;
+        margin-bottom: 20px;
+        font-size: 18px;
+      }
+
+      .number-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 12px;
+      }
+
+      .number-btn {
+        background: rgba(71, 85, 105, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        width: 100%;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+
+      .number-btn:hover {
+        background: rgba(71, 85, 105, 0.8);
+      }
+
+      /* Style for active/selected number */
+      .number-btn.active {
+        background: #475569;
+        border-color: rgba(255, 255, 255, 0.2);
+      }
+
+      .quiz-content {
+        background-color: #1e293b;
+        border-radius: 12px;
+        padding: 32px;
+        color: white;
+      }
+
+      .answer-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 16px;
+        margin-top: 24px;
+      }
+
+      .answer-option {
+        background-color: white;
+        border: none;
+        color: #1e293b;
+        padding: 16px;
+        border-radius: 8px;
+        width: 100%;
+        text-align: left;
+      }
+
+      .nav-buttons {
+        margin-top: 32px;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .btn-nav {
+        padding: 8px 24px;
+        border-radius: 8px;
+        color: white;
+        border: none;
+      }
+
+      .btn-prev {
+        background-color: #475569;
+      }
+
+      .btn-next {
+        background-color: #64748b;
+      }
+
+      .number-btn.answered {
+        background: #1e40af;
+        border-color: #3b82f6;
+      }
+
+      .answer-option.selected {
+        background-color: #3b82f6;
+        color: white;
+        font-weight: bold;
+      }
+
+      .btn-nav.btn-finish {
+        background-color: #16a34a;
+      }
+
+      .btn-nav.btn-finish:hover {
+        background-color: #15803d;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h5 class="mb-0" id="title"></h5>
+      <div class="timer">
+        <span>Soal 1 dari 20</span>
+        <div class="time" id="timer">--</div>
+      </div>
+    </header>
+
+    <div class="container py-4">
+      <div class="row g-4">
+        <div class="col-md-4">
+          <div class="info-box">
+            <h6 class="text-white mb-4">Informasi Kuis</h6>
+            <div class="info-item">
+              <img src="../../Gambar/icon/matakuliah_putih.svg" alt="" />
+              <div>
+                <span>Mata Kuliah</span>
+                <span id="titleQuiz"></span>
+              </div>
+            </div>
+            <div class="info-item">
+              <img src="../../Gambar/icon/person_putih.svg" alt="" />
+              <div>
+                <span>Dosen</span>
+                <span id="lecturerName"></span>
+              </div>
+            </div>
+            <div class="info-item">
+              <img src="../../Gambar/icon/waktu_putih.svg" alt="" />
+              <div>
+                <span>Waktu Pengerjaan</span>
+                <span id="duration"></span>
+              </div>
+            </div>
+            <div class="info-item">
+              <img src="../../Gambar/icon/jumlah_soal_putih.svg" alt="" />
+              <div>
+                <span>Jumlah Soal</span>
+                <span id="questionCount"></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="question-box">
+            <h6>Daftar Soal</h6>
+            <div class="number-grid" id="daftarSoal"></div>
+          </div>
+        </div>
+
+        <div class="col-md-8">
+          <div class="quiz-content">
+            <p id="question-text">Memuat pertanyaan...</p>
+
+            <div class="answer-grid" id="answer-grid"></div>
+
+            <div class="nav-buttons">
+              <button class="btn-nav btn-prev" id="btn-prev">Sebelumnya</button>
+              <button class="btn-nav btn-next" id="btn-next">
+                Selanjutnya
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="../../Admin/assets/custom.js"></script>
+    <script>
+      // === Variabel State (ditaruh di luar fungsi) ===
+      let quizData = null; // Untuk menyimpan seluruh data dari API
+      let currentQuestionIndex = 0; // Untuk melacak soal yang sedang ditampilkan
+      let userAnswers = []; // Untuk menyimpan jawaban user
+      let quizId = null; // Tambahkan ini
+
+      // Fungsi untuk menampilkan pertanyaan dan pilihan jawaban
+      function displayQuestion(index) {
+        const question = quizData.question_items[index];
+
+        // Tampilkan teks pertanyaan
+        document.getElementById("question-text").textContent =
+          question.question_text;
+
+        // Kosongkan pilihan jawaban sebelumnya
+        const answerGrid = document.getElementById("answer-grid");
+        answerGrid.innerHTML = "";
+
+        // Buat dan tampilkan pilihan jawaban baru
+        question.choice_items.forEach((item) => {
+          const button = document.createElement("button");
+          button.className = "answer-option";
+          button.innerHTML = `<strong>${item.choice.toUpperCase()}.</strong> ${
+            item.answer
+          }`;
+
+          // Tambahkan event listener untuk setiap pilihan
+          button.addEventListener("click", () => {
+            // Simpan jawaban user
+            userAnswers[index] = item.choice;
+
+            // Hapus kelas 'selected' dari semua pilihan di soal ini
+            document
+              .querySelectorAll(".answer-option")
+              .forEach((btn) => btn.classList.remove("selected"));
+
+            // Tambahkan kelas 'selected' ke pilihan yang baru diklik
+            button.classList.add("selected");
+
+            // Tandai nomor soal sebagai sudah dijawab
+            document
+              .querySelector(`.number-btn[data-index='${index}']`)
+              .classList.add("answered");
+          });
+
+          // Jika soal ini sudah pernah dijawab, tandai pilihan yang tersimpan
+          if (userAnswers[index] === item.choice) {
+            button.classList.add("selected");
+          }
+
+          answerGrid.appendChild(button);
+        });
+
+        updateNavigation();
+      }
+
+      // Fungsi untuk memperbarui tombol navigasi dan status lainnya
+      function updateNavigation() {
+        const headerStatus = document.querySelector(".timer span");
+        headerStatus.textContent = `Soal ${currentQuestionIndex + 1} dari ${
+          quizData.question_count
+        }`;
+
+        const btnNext = document.getElementById("btn-next");
+        const btnPrev = document.getElementById("btn-prev");
+
+        btnPrev.disabled = currentQuestionIndex === 0;
+
+        // LOGIKA UTAMA UNTUK MENGGANTI TOMBOL
+        if (currentQuestionIndex === quizData.question_items.length - 1) {
+          // Jika ini adalah soal terakhir
+          btnNext.textContent = "Selesai";
+          btnNext.classList.add("btn-finish"); // Tambah class hijau
+          btnNext.disabled = false; // Pastikan tombol bisa diklik untuk submit
+        } else {
+          // Jika bukan soal terakhir
+          btnNext.textContent = "Selanjutnya";
+          btnNext.classList.remove("btn-finish"); // Hapus class hijau
+          btnNext.disabled = false;
+        }
+
+        // Update status tombol nomor soal (mana yang aktif)
+        document.querySelectorAll(".number-btn").forEach((btn) => {
+          btn.classList.remove("active");
+          if (parseInt(btn.dataset.index) === currentQuestionIndex) {
+            btn.classList.add("active");
+          }
+        });
+      }
+
+      function muatDataApi() {
+        const queryString = window.location.search;
+        const params = new URLSearchParams(queryString);
+        // Simpan quizId ke variabel global
+        quizId = params.get("quiz_id");
+
+        // Menggunakan URL dari response Anda, pastikan `API_URL` sudah didefinisikan
+        return $.ajax({
+          url: `${API_URL}/api-student/quizzes/${quizId}/start`,
+          type: "GET",
+          xhrFields: {
+            withCredentials: true,
+          },
+          success: function (response) {
+            // Simpan data ke variabel global
+            quizData = response.data;
+            // Inisialisasi array jawaban user dengan nilai null
+            userAnswers = new Array(quizData.question_count).fill(null);
+
+            // --- (Kode Anda untuk menampilkan info kuis tetap di sini) ---
+            document.getElementById("title").innerHTML = `
+        Kuis ${toTitleCase(quizData.course_name)}
+      `;
+            document.getElementById("titleQuiz").innerHTML = `
+        ${toTitleCase(quizData.course_name)} - ${toTitleCase(
+              quizData.quiz_name
+            )}
+      `;
+            document.getElementById("lecturerName").innerHTML = `
+        ${toTitleCase(quizData.lecturer_name)}
+      `;
+            document.getElementById("duration").innerHTML = `
+        ${quizData.duration} Menit
+      `;
+            document.getElementById("questionCount").innerHTML = `
+        ${quizData.question_count} Soal
+      `;
+
+            // Modifikasi cara membuat daftar soal
+            const $body = $("#daftarSoal");
+            $body.empty(); // Kosongkan dulu untuk mencegah duplikasi
+            quizData.question_items.forEach((item, index) => {
+              const button = document.createElement("button");
+              button.className = "number-btn";
+              button.textContent = index + 1;
+              // Simpan index di data-attribute untuk referensi
+              button.dataset.index = index;
+              button.addEventListener("click", () => {
+                currentQuestionIndex = index;
+                displayQuestion(currentQuestionIndex);
+              });
+              $body.append(button);
+            });
+            // --- (Akhir dari kode Anda) ---
+
+            // === PANGGIL FUNGSI BARU UNTUK MENAMPILKAN SOAL PERTAMA ===
+            displayQuestion(currentQuestionIndex);
+          },
+          error: function (xhr) {
+            if (xhr.status === 401) {
+              refreshAccessToken(muatDataApi);
+            } else if (xhr.status === 400) {
+              // window.location.href = "/index.html";
+              console.error("Bad Request, mungkin quiz_id tidak valid.");
+            }
+            console.error("Error memuat data:", xhr);
+          },
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        muatDataApi().done(function () {
+          // Mulai timer SETELAH data API berhasil dimuat
+          if (!quizData) return;
+
+          let sisaDetik = quizData.duration * 60;
+          const timerEl = document.getElementById("timer");
+
+          const countdown = setInterval(() => {
+            if (sisaDetik <= 0) {
+              clearInterval(countdown);
+              timerEl.textContent = "Waktu habis!";
+              // Di sini Anda bisa menambahkan logika untuk submit kuis otomatis
+            } else {
+              const menit = Math.floor(sisaDetik / 60);
+              const detik = sisaDetik % 60;
+              timerEl.textContent = `${menit}:${detik < 10 ? "0" : ""}${detik}`;
+              sisaDetik--;
+            }
+          }, 1000);
+        });
+
+        // Tambahkan Event Listener untuk tombol navigasi
+        document.getElementById("btn-next").addEventListener("click", () => {
+          if (currentQuestionIndex === quizData.question_items.length - 1) {
+            // Jika di soal terakhir, tombol ini berfungsi sebagai "Selesai"
+            handleQuizSubmission();
+          } else {
+            // Jika bukan, berfungsi sebagai "Selanjutnya"
+            currentQuestionIndex++;
+            displayQuestion(currentQuestionIndex);
+          }
+        });
+
+        document.getElementById("btn-prev").addEventListener("click", () => {
+          if (currentQuestionIndex > 0) {
+            currentQuestionIndex--;
+            displayQuestion(currentQuestionIndex);
+          }
+        });
+      });
+
+      // Fungsi baru untuk mengirimkan jawaban
+      function handleQuizSubmission() {
+        // Minta konfirmasi dari user
+        if (
+          !confirm(
+            "Apakah Anda yakin ingin menyelesaikan dan mengirimkan jawaban kuis ini?"
+          )
+        ) {
+          return; // Batalkan jika user menekan 'Cancel'
+        }
+
+        console.log("Jawaban yang akan dikirim:", userAnswers);
+
+        // Persiapkan data yang akan dikirim (payload)
+        // Backend mungkin mengharapkan format tertentu, sesuaikan jika perlu
+        const submissionData = {
+          answers: userAnswers.map((answer, index) => {
+            // Sesuaikan format jika backend butuh question_id
+            return {
+              // question_id: quizData.question_items[index].id, // Jika ada ID soal
+              answer: answer,
+            };
+          }),
+        };
+
+        // Kirim data menggunakan AJAX (jQuery)
+        const submitButton = document.getElementById("btn-next");
+        submitButton.disabled = true;
+        submitButton.textContent = "Mengirim...";
+
+        // GANTI URL INI dengan endpoint API untuk submit
+        const submitUrl = `${API_URL}/api-student/quizzes/${quizId}/finish`;
+
+        $.ajax({
+          url: submitUrl,
+          type: "POST",
+          contentType: "application/json", // Penting untuk mengirim data JSON
+          data: JSON.stringify(submissionData), // Ubah data ke format JSON string
+          xhrFields: {
+            withCredentials: true,
+          },
+          success: function (response) {
+            // Jika berhasil, tampilkan pesan dan arahkan ke halaman hasil
+            alert(
+              "Kuis berhasil diserahkan! Anda akan diarahkan ke halaman hasil."
+            );
+            // GANTI URL INI dengan halaman hasil kuis Anda
+            window.location.href = `/halaman-hasil-kuis.html?attempt_id=${response.data.attempt_id}`;
+          },
+          error: function (xhr) {
+            // Jika gagal, tampilkan pesan error dan aktifkan kembali tombol
+            alert(
+              "Terjadi kesalahan saat mengirim jawaban. Silakan coba lagi."
+            );
+            console.error("Error submitting quiz:", xhr.responseText);
+            submitButton.disabled = false;
+            submitButton.textContent = "Selesai";
+          },
+        });
+      }
+    </script>
+  </body>
+</html>
