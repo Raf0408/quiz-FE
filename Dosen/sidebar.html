@@ -1,0 +1,73 @@
+<!-- sidebar.html -->
+<div class="sidebar d-flex flex-column justify-content-between p-3">
+  <div>
+    <div class="d-flex align-items-center justify-content-between mb-4">
+      <div class="d-flex align-items-center gap-2 logo-wrap">
+        <h5 class="logo-title mb-0">Quizku.</h5>
+      </div>
+      <img
+        src="../../Gambar/icon/panah_kiri.svg"
+        alt="geser"
+        class="logo-geser"
+        id="geserSidebar"
+      />
+    </div>
+
+    <nav class="nav flex-column">
+      <a href="../dashboard/dashboard.html" class="nav-link">
+        <img
+          src="../../Gambar/icon/dashboard.svg"
+          class="sidebar-icon"
+          alt="Dashboard"
+        />
+        <span>Dashboard</span>
+      </a>
+      <a href="../manajemen_kuis/manajemen_kuis.html" class="nav-link">
+        <img
+          src="../../Gambar/icon/kelola_pengguna.svg"
+          class="sidebar-icon"
+          alt="Managemen Kuis"
+        />
+        <span>Manajemen Kuis</span>
+      </a>
+      <a href="../bank_soal/bank_soal.html" class="nav-link">
+        <img
+          src="../../Gambar/icon/bank_soal.svg"
+          class="sidebar-icon"
+          alt="Bank Soal"
+        />
+        <span>Bank Soal</span>
+      </a>
+      <a href="../Pengaturan/pengaturan.html" class="nav-link">
+        <img
+          src="../../Gambar/icon/pengaturan.svg"
+          class="sidebar-icon"
+          alt="Pengaturan"
+        />
+        <span>Pengaturan</span>
+      </a>
+    </nav>
+  </div>
+  <div>
+    <img class="line-icon" alt="line" src="../../Gambar/icon/Line 5.svg" />
+    <div class="d-flex align-items-center mb-2">
+      <img id="profile-image" alt="profile" class="profile-img me-2" />
+      <div class="profile-info">
+        <strong id="profile-name"></strong><br />
+        <small id="profile-email"></small>
+      </div>
+    </div>
+    <button
+      class="btn logout-btn d-flex align-items-center justify-content-center"
+      onclick="logout()"
+    >
+      <img
+        src="../../Gambar/icon/Logout.svg"
+        class="me-2"
+        style="width: 18px"
+        alt="Logout"
+      />
+      <span class="logout-text">Logout</span>
+    </button>
+  </div>
+</div>

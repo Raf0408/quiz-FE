@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+
+    <style>
+      /* Styles dipertahankan seperti semula */
+      body {
+        background-color: #f1f5f9;
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+      }
+      .container-flex {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background-color: #1d2d44;
+        color: white;
+        height: 100vh;
+        width: 250px;
+        border-right: 2px solid #e2e8f0;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+      }
+
+      .sidebar.collapsed {
+        width: 80px;
+      }
+
+      .sidebar .nav-link {
+        color: #f1f4f5;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #334155;
+        color: white;
+      }
+
+      .sidebar .nav-link span {
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.collapsed .nav-link span,
+      .sidebar.collapsed .logout-text,
+      .sidebar.collapsed .logo-title,
+      .sidebar.collapsed .profile-info {
+        display: none !important;
+      }
+
+      .sidebar.collapsed .nav-link {
+        justify-content: center;
+      }
+
+      .sidebar.collapsed .logout-btn {
+        width: auto;
+        padding: 0.5rem;
+        justify-content: center;
+      }
+
+      .active {
+        background-color: #334155;
+        color: #fff;
+        border-radius: 10px;
+      }
+
+      .line-icon {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .profile-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .logout-btn {
+        background-color: #f1f4f5;
+        color: #1d2d44;
+        border-radius: 5px;
+        width: 100%;
+        transition: width 0.3s ease;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .logout-btn:hover {
+        background-color: #e2e8f0;
+      }
+
+      .sidebar-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .logo-geser {
+        width: 15px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-title {
+        font-size: 1.25rem;
+        transition: opacity 0.3s ease;
+        margin: 0;
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+        background-color: #f1f5f9;
+      }
+      .badge.bg-secondary {
+        background-color: #6c757d;
+        font-size: 0.8rem;
+        padding: 0.4em 0.6em;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d-flex">
+      <!-- Sidebar akan dimuat di sini -->
+      <div id="sidebar-container"></div>
+
+      <!-- Main Content -->
+      <div class="flex-grow-1 p-4 main-content">
+        <div class="mb-4">
+          <h2>Dashboard</h2>
+          <p class="text-muted">
+            Yuk, kita lihat sekilas tentang sistem aplikasi kuis kamu
+          </p>
+        </div>
+
+        <div class="row g-4">
+          <div class="col-md-3">
+            <div class="card border border-secondary shadow-sm">
+              <div class="card-body">
+                <h6
+                  class="card-title d-flex justify-content-between align-items-center"
+                >
+                  Jumlah Mahasiswa
+                  <img src="../../Gambar/icon/person.svg" width="24" />
+                </h6>
+                <h3 id="jumlah-pengguna"></h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card border border-secondary shadow-sm">
+              <div class="card-body">
+                <h6
+                  class="card-title d-flex justify-content-between align-items-center"
+                >
+                  Jumlah Kelas
+                  <img src="../../Gambar/icon/person.svg" width="24" />
+                </h6>
+                <h3 id="jumlah-kelas"></h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card border border-secondary shadow-sm">
+              <div class="card-body">
+                <h6
+                  class="card-title d-flex justify-content-between align-items-center"
+                >
+                  Jumlah Kuis
+                  <img src="../../Gambar/icon/person.svg" width="24" />
+                </h6>
+                <h3 id="jumlah-kuis"></h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-3">
+            <div class="card border border-secondary shadow-sm">
+              <div class="card-body">
+                <h6
+                  class="card-title d-flex justify-content-between align-items-center"
+                >
+                  Jumlah Matakuliah
+                  <img src="../../Gambar/icon/person.svg" width="24" />
+                </h6>
+                <h3 id="jumlah-matakuliah"></h3>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../Admin/assets/custom.js"></script>
+    <!-- Script Load Sidebar -->
+    <script>
+      function muatDataApi() {
+        return $.ajax({
+          url: `${API_URL}/api-lecturer/lecturer-dashboard`,
+          type: "GET",
+          xhrFields: {
+            withCredentials: true,
+          },
+          success: function (response) {
+            const jumlahPengguna = document.getElementById("jumlah-pengguna");
+            const jumlahKuis = document.getElementById("jumlah-kuis");
+            const jumlahKelas = document.getElementById("jumlah-kelas");
+            const jumlahMatakuliah =
+              document.getElementById("jumlah-matakuliah");
+
+            jumlahPengguna.innerHTML = response["data"]["total_users"];
+            jumlahKuis.innerHTML = response["data"]["total_quizzes"];
+            jumlahKelas.innerHTML = response["data"]["total_classes"];
+            jumlahMatakuliah.innerHTML = response["data"]["total_courses"];
+          },
+
+          error: function (xhr) {
+            if (xhr.status === 401) {
+              refreshAccessToken(muatDataApi);
+            } else if (xhr.status === 400) {
+              window.location.href = "/index.html";
+            }
+
+            console.error("Error memuat data:", xhr);
+          },
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("../sidebar.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("sidebar-container").innerHTML = data;
+
+            // Sidebar geser
+            const geserBtn = document.getElementById("geserSidebar");
+            const sidebar = document.querySelector(".sidebar");
+
+            if (geserBtn && sidebar) {
+              let isCollapsed = false;
+              geserBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+                isCollapsed = !isCollapsed;
+
+                geserBtn.src = isCollapsed
+                  ? "../../Gambar/icon/panah_kanan.svg"
+                  : "../../Gambar/icon/panah_kiri.svg";
+              });
+            }
+
+            // active sidebar
+            const currentPath = window.location.pathname.split("/").pop();
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            navLinks.forEach((link) => {
+              const linkPath = link.getAttribute("href").split("/").pop();
+
+              if (currentPath === linkPath) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+
+            const token = $.cookie("token");
+            let dataToken = decodeJWT(token);
+            if (dataToken.role != "dosen") {
+              window.location.href = "http://127.0.0.1:5500/index.html";
+            }
+          });
+
+        muatDataApi();
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin - Pengaturan</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode@4.0.0/build/jwt-decode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <style>
+      body {
+        background-color: #f1f5f9;
+        font-family: "Segoe UI", sans-serif;
+        margin: 0;
+      }
+      .container-flex {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      .sidebar {
+        background-color: #1d2d44;
+        color: white;
+        height: 100vh;
+        width: 250px;
+        border-right: 2px solid #e2e8f0;
+        transition: width 0.3s ease;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        padding: 1rem;
+      }
+
+      .sidebar.collapsed {
+        width: 80px;
+      }
+
+      .sidebar .nav-link {
+        color: #f1f4f5;
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        padding: 0.5rem 0.75rem;
+        border-radius: 8px;
+      }
+
+      .sidebar .nav-link:hover {
+        background-color: #334155;
+        color: white;
+      }
+
+      .sidebar .nav-link span {
+        transition: opacity 0.3s ease;
+      }
+
+      .sidebar.collapsed .nav-link span,
+      .sidebar.collapsed .logout-text,
+      .sidebar.collapsed .logo-title,
+      .sidebar.collapsed .profile-info {
+        display: none !important;
+      }
+
+      .sidebar.collapsed .nav-link {
+        justify-content: center;
+      }
+
+      .sidebar.collapsed .logout-btn {
+        width: auto;
+        padding: 0.5rem;
+        justify-content: center;
+      }
+
+      .active {
+        background-color: #334155;
+        color: #fff;
+        border-radius: 10px;
+      }
+
+      .line-icon {
+        width: 100%;
+        margin: 10px 0;
+      }
+
+      .profile-img {
+        width: 40px;
+        height: 40px;
+        object-fit: cover;
+        border-radius: 50%;
+      }
+
+      .logout-btn {
+        background-color: #f1f4f5;
+        color: #1d2d44;
+        border-radius: 5px;
+        width: 100%;
+        transition: width 0.3s ease;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .logout-btn:hover {
+        background-color: #e2e8f0;
+      }
+
+      .sidebar-icon {
+        width: 18px;
+        height: 18px;
+      }
+
+      .logo-geser {
+        width: 15px;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+      }
+
+      .logo-title {
+        font-size: 1.25rem;
+        transition: opacity 0.3s ease;
+        margin: 0;
+      }
+
+      .logo-wrap {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .main-content {
+        flex-grow: 1;
+        padding: 40px;
+        background-color: #f1f5f9;
+      }
+      .pengaturan-parent {
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 15px;
+      }
+      .ubah-foto-profil {
+        align-self: stretch;
+        position: relative;
+      }
+      .drag-atau-masukan {
+        flex: 1;
+        position: relative;
+      }
+      .drag-atau-masukan-foto-disini-wrapper {
+        align-self: stretch;
+        border-radius: 8px;
+        border: 1px solid #b1acac;
+        box-sizing: border-box;
+        height: 225px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        text-align: center;
+        color: #919191;
+        cursor: pointer;
+      }
+      .ubah-foto-profil-parent {
+        align-self: stretch;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 10px;
+      }
+      .masukan-password-baru-wrapper {
+        align-self: stretch;
+        border-radius: 8px;
+        border: 1px solid #b1acac;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        color: #919191;
+      }
+      .custom-btn {
+        background-color: #1e2a3a;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: bold;
+      }
+      .custom-btn:hover {
+        background-color: #2a3e50;
+      }
+      .frame-group {
+        max-width: 800px;
+        width: 100%;
+        margin: 0 auto;
+        box-shadow: -34px 69px 22px rgba(141, 139, 139, 0),
+          -22px 44px 20px rgba(0, 0, 0, 0.01),
+          -12px 25px 17px rgba(0, 0, 0, 0.05),
+          -5px 11px 12px rgba(0, 0, 0, 0.09), -1px 3px 7px rgba(0, 0, 0, 0.1);
+        border-radius: 14px;
+        background-color: #fff;
+        border: 1px solid #b1acac;
+        box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 25px;
+        gap: 70px;
+        font-size: 15px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="d-flex">
+      <!-- Sidebar -->
+      <div id="sidebar-container"></div>
+
+      <!-- Main Content -->
+      <div class="flex-grow-1 p-4 main-content">
+        <div class="mb-4">
+          <h2>Pengaturan</h2>
+          <p class="text-muted">
+            Yuk, kita lihat sekilas tentang sistem aplikasi kuis kamu
+          </p>
+          <form id="formEdit">
+            <div class="frame-group">
+              <div class="pengaturan-parent">
+                <div class="ubah-foto-profil-parent">
+                  <b class="ubah-foto-profil">Ubah foto profil</b>
+                  <label
+                    for="gambar"
+                    class="drag-atau-masukan-foto-disini-wrapper"
+                  >
+                    <input
+                      type="file"
+                      name="gambar"
+                      id="gambar"
+                      accept="image/*"
+                      hidden
+                    />
+                    <div class="drag-atau-masukan" id="previewText">
+                      Drag atau Masukan foto disini
+                    </div>
+                  </label>
+                </div>
+
+                <div class="ubah-foto-profil-parent">
+                  <b class="ubah-foto-profil">Ubah password</b>
+                  <div class="masukan-password-baru-wrapper">
+                    <input
+                      type="password"
+                      name="passwordBaru"
+                      class="form-control border-0"
+                      placeholder="Masukkan password baru"
+                      style="outline: none; box-shadow: none"
+                      id="password"
+                    />
+                  </div>
+                </div>
+              </div>
+              <button class="custom-btn w-100">Simpan</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="../../Admin/assets/custom.js"></script>
+    <script>
+      $("#formEdit").submit(function (e) {
+        e.preventDefault();
+
+        const token = $.cookie("token");
+        const data = decodeJWT(token);
+        const password = $("#password").val();
+        const gambarInput = $("#gambar")[0];
+
+        const formData = new FormData();
+        formData.append("email", data.email);
+        formData.append("name", data.name);
+        formData.append("password", password);
+        if (gambarInput && gambarInput.files && gambarInput.files.length > 0) {
+          formData.append("image", gambarInput.files[0]);
+        }
+
+        function updateUserData() {
+          $.ajax({
+            url: `${API_URL}/api/update-user`,
+            type: "PUT",
+            xhrFields: {
+              withCredentials: true,
+            },
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              console.log("Update berhasil!", response);
+              alert("Update berhasil");
+              window.location.href = "pengaturan.html";
+            },
+            error: function (xhr, status, error) {
+              if (xhr.status === 401) {
+                refreshAccessToken(updateUserData);
+              } else if (xhr.status === 400) {
+                window.location.href = "pengaturan.html";
+              }
+              alert("Update gagal");
+            },
+          });
+        }
+
+        updateUserData();
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        fetch("../sidebar.html")
+          .then((response) => response.text())
+          .then((data) => {
+            document.getElementById("sidebar-container").innerHTML = data;
+
+            // Sidebar geser
+            const geserBtn = document.getElementById("geserSidebar");
+            const sidebar = document.querySelector(".sidebar");
+
+            if (geserBtn && sidebar) {
+              let isCollapsed = false;
+              geserBtn.addEventListener("click", () => {
+                sidebar.classList.toggle("collapsed");
+                isCollapsed = !isCollapsed;
+
+                geserBtn.src = isCollapsed
+                  ? "../../Gambar/icon/panah_kanan.svg"
+                  : "../../Gambar/icon/panah_kiri.svg";
+              });
+            }
+
+            // active sidebar
+            const currentPath = window.location.pathname.split("/").pop();
+            const navLinks = document.querySelectorAll(".nav-link");
+
+            navLinks.forEach((link) => {
+              const linkPath = link.getAttribute("href").split("/").pop();
+
+              if (currentPath === linkPath) {
+                link.classList.add("active");
+              } else {
+                link.classList.remove("active");
+              }
+            });
+
+            const token = $.cookie("token");
+            let dataToken = decodeJWT(token);
+            if (dataToken.role != "dosen") {
+              window.location.href = "http://127.0.0.1:5500/index.html";
+            }
+          });
+
+        // Preview gambar atau nama file
+        const gambarInput = document.getElementById("gambar");
+        const previewText = document.getElementById("previewText");
+
+        gambarInput.addEventListener("change", function () {
+          const file = this.files[0];
+          if (file) {
+            if (file.type.startsWith("image/")) {
+              const reader = new FileReader();
+              reader.onload = function (e) {
+                previewText.innerHTML = `<img src="${e.target.result}" alt="Preview" style="max-width: 200px; border-radius: 4px;" />`;
+              };
+              reader.readAsDataURL(file);
+            } else {
+              previewText.textContent = file.name;
+            }
+          } else {
+            previewText.textContent = "Drag atau Masukan foto disini";
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

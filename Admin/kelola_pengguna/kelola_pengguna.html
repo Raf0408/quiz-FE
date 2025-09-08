@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kelola Pengguna</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        background-color: #f1f5f9;
+        font-family: "Segoe UI", sans-serif;
+      }
+
+      .sidebar {
+        width: 250px;
+        background-color: #1e293b;
+        color: #fff;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        padding: 20px 10px;
+      }
+
+      .sidebar a {
+        color: #cbd5e1;
+        display: block;
+        padding: 10px;
+        border-radius: 8px;
+        text-decoration: none;
+        margin-bottom: 5px;
+      }
+
+      .sidebar a.active,
+      .sidebar a:hover {
+        background-color: #334155;
+        color: #fff;
+      }
+
+      .main-content {
+        margin-left: 260px;
+        padding: 40px;
+      }
+
+      .table-container {
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+        border: 1px solid #ced4da;
+      }
+
+      .custom-btn {
+        background-color: #1e2a3a;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-weight: bold;
+      }
+
+      .custom-btn:hover {
+        background-color: #2a3e50;
+      }
+
+      .avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 10px;
+      }
+
+      .action-icon {
+        cursor: pointer;
+        margin: 0 8px;
+        font-size: 20px;
+      }
+
+      .action-icon.edit {
+        color: #0d6efd;
+      }
+
+      .action-icon.delete {
+        color: #dc3545;
+      }
+
+      select#filterRole {
+        width: 160px;
+        padding: 8px 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+      }
+
+      .badge {
+        background-color: #e2e8f0;
+        color: #1e293b;
+        font-size: 16px;
+        padding: 6px 12px;
+        border-radius: 10px;
+      }
+
+      .table th {
+        font-size: 16px;
+      }
+
+      .table td {
+        font-size: 16px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- navbar.html -->
+    <div class="sidebar d-flex flex-column justify-content-between p-3">
+      <div>
+        <!-- Logo -->
+        <div class="d-flex align-items-center justify-content-between mb-4">
+          <div class="d-flex align-items-center gap-2 logo-wrap">
+            <h5 class="logo-title mb-0">Quizku.</h5>
+          </div>
+          <img
+            src="../../Gambar/icon/panah_kiri.svg"
+            alt="geser"
+            class="logo-geser"
+            id="geserSidebar"
+          />
+        </div>
+
+        <!-- Menu -->
+        <nav class="nav flex-column">
+          <a href="dahsboard.html" class="nav-link active">
+            <img
+              src="../../Gambar/icon/dashboard.svg"
+              class="sidebar-icon active"
+              alt="Dashboard"
+            />
+            <span>Dashboard</span>
+          </a>
+          <a href="#" class="nav-link">
+            <img
+              src="../../Gambar/icon/kelola_pengguna.svg"
+              class="sidebar-icon"
+              alt="Kelola Pengguna"
+            />
+            <span>Kelola Pengguna</span>
+          </a>
+          <a href="#" class="nav-link">
+            <img
+              src="../../Gambar/icon/bank_soal.svg"
+              class="sidebar-icon"
+              alt="Bank Soal"
+            />
+            <span>Bank Soal</span>
+          </a>
+          <a href="#" class="nav-link">
+            <img
+              src="../../Gambar/icon/history_quiz.svg"
+              class="sidebar-icon"
+              alt="Histori Quiz"
+            />
+            <span>Histori Quiz</span>
+          </a>
+          <a href="#" class="nav-link">
+            <img
+              src="../../Gambar/icon/matakuliah.svg"
+              class="sidebar-icon"
+              alt="Matakuliah"
+            />
+            <span>Matakuliah</span>
+          </a>
+          <a href="#" class="nav-link">
+            <img
+              src="../../Gambar/icon/dosen.svg"
+              class="sidebar-icon"
+              alt="Dosen"
+            />
+            <span>Dosen</span>
+          </a>
+          <a href="#" class="nav-link">
+            <img
+              src="../../Gambar/icon/mahasiswa.svg"
+              class="sidebar-icon"
+              alt="Mahasiswa"
+            />
+            <span>Mahasiswa</span>
+          </a>
+          <a href="#" class="nav-link">
+            <img
+              src="../../Gambar/icon/kelas.svg"
+              class="sidebar-icon"
+              alt="Kelas"
+            />
+            <span>Kelas</span>
+          </a>
+          <a href="#" class="nav-link">
+            <img
+              src="../../Gambar/icon/pengaturan.svg"
+              class="sidebar-icon"
+              alt="Pengaturan"
+            />
+            <span>Pengaturan</span>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Garis & Profile -->
+      <div>
+        <!-- Garis -->
+        <img class="line-icon" alt="line" src="../../Gambar/icon/Line 5.svg" />
+
+        <!-- Profile -->
+        <div class="d-flex align-items-center mb-2">
+          <img src="Ellipse 8.png" alt="profile" class="profile-img me-2" />
+          <div class="profile-info">
+            <strong>Dominick</strong><br />
+            <small>dominick@gmail.com</small>
+          </div>
+        </div>
+        <button
+          class="btn logout-btn d-flex align-items-center justify-content-center"
+        >
+          <img
+            src="../../Gambar/icon/Logout.svg"
+            class="me-2"
+            style="width: 18px"
+            alt="Logout"
+          />
+          <span class="logout-text">Logout</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <h2 class="fw-bold mb-2">Kelola Pengguna</h2>
+      <p class="mb-4">
+        Di sini kamu bisa membuat dan mengatur akun untuk Mahasiswa, Dosen, dan
+        Admin.
+      </p>
+      <div class="d-flex justify-content-end">
+        <a href="tambah_user.html" class="text-decoration-none custom-btn"
+          >+ Tambah User</a
+        >
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <input
+          type="text"
+          class="form-control w-25"
+          id="cari"
+          placeholder="Search..."
+        />
+        <div class="d-flex gap-2">
+          <select id="filterRole">
+            <option value="all">All Roles</option>
+            <option value="mahasiswa">Mahasiswa</option>
+            <option value="dosen">Dosen</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-container">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>User</th>
+              <th>Role</th>
+              <th>Created</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="daftarPengguna"></tbody>
+        </table>
+      </div>
+    </div>
+    <script>
+      // Data pengguna disimpan pada variabel sesi, bukan localStorage
+      let dataPengguna = [];
+
+      // Fungsi untuk inisialisasi data sampel
+      function inisialisasiDataSampel() {
+        // Membuat beberapa data pengguna contoh
+        return [
+          {
+            nama: "John Doe",
+            email: "john@example.com",
+            role: "admin",
+            password: "password123",
+            created: new Date().toLocaleDateString("id-ID"),
+          },
+        ];
+      }
+
+      // Fungsi untuk memuat data pengguna dan menampilkan di tabel
+      function muatDataPengguna() {
+        const tbody = document.getElementById("daftarPengguna");
+        const cari = document.getElementById("cari")?.value.toLowerCase() || "";
+        const filterRole =
+          document.getElementById("filterRole")?.value || "all";
+
+        if (!tbody) return; // Pastikan elemen tbody ada
+
+        tbody.innerHTML = "";
+
+        dataPengguna.forEach((user, index) => {
+          const matchRole = filterRole === "all" || user.role === filterRole;
+          const matchSearch =
+            user.nama.toLowerCase().includes(cari) ||
+            user.email.toLowerCase().includes(cari);
+
+          if (matchRole && matchSearch) {
+            const tr = document.createElement("tr");
+
+            tr.innerHTML = `
+      <td class="d-flex align-items-center">
+          <img src="https://i.pravatar.cc/150?img=${
+            index + 10
+          }" class="avatar" alt="User">
+          <div>
+              <div class="fw-semibold">${user.nama}</div>
+              <div class="text-muted small">${user.email}</div>
+          </div>
+      </td>
+      <td><span class="badge text-capitalize">${user.role}</span></td>
+      <td>${user.created}</td>
+      <td>
+          <span class="action-icon edit" onclick="editPengguna(${index})">&#9998;</span>
+          <span class="action-icon delete" onclick="hapusPengguna(${index})">&#128465;</span>
+      </td>
+    `;
+            tbody.appendChild(tr);
+          }
+        });
+      }
+
+      // Fungsi untuk menghapus pengguna
+      function hapusPengguna(index) {
+        if (confirm("Yakin ingin menghapus pengguna ini?")) {
+          dataPengguna.splice(index, 1);
+          muatDataPengguna();
+        }
+      }
+
+      // Fungsi untuk mengarahkan ke halaman edit
+      function editPengguna(index) {
+        // Simpan indeks di sessionStorage agar tidak hilang saat reload
+        sessionStorage.setItem("editIndex", index);
+        window.location.href = "edit_user.html";
+      }
+
+      // Fungsi untuk menambah pengguna baru
+      function tambahPengguna(e) {
+        if (e) e.preventDefault();
+
+        const nama = document.getElementById("nama")?.value;
+        const email = document.getElementById("email")?.value;
+        const role = document.getElementById("role")?.value;
+        const password = document.getElementById("password")?.value;
+
+        if (!nama || !email || !role) {
+          alert("Semua field harus diisi!");
+          return;
+        }
+
+        // Buat objek pengguna baru
+        const newUser = {
+          nama: nama,
+          email: email,
+          role: role,
+          password: password || "",
+          created: new Date().toLocaleDateString("id-ID"),
+        };
+
+        // Tambahkan pengguna baru ke array
+        dataPengguna.push(newUser);
+
+        // Reset form
+        document.getElementById("formTambahPengguna")?.reset();
+
+        // Jika di halaman index/daftar, reload data
+        if (document.getElementById("daftarPengguna")) {
+          muatDataPengguna();
+        } else {
+          // Jika di halaman tambah, redirect ke halaman daftar
+          alert("Pengguna berhasil ditambahkan!");
+          // Simpan data ke sessionStorage untuk digunakan di halaman kelola_pengguna
+          sessionStorage.setItem("dataPengguna", JSON.stringify(dataPengguna));
+          window.location.href = "index.html";
+        }
+      }
+
+      // Fungsi untuk memuat form edit
+      function loadEditForm() {
+        const editIndex = sessionStorage.getItem("editIndex");
+        if (editIndex === null) return;
+
+        // Ambil data dari sessionStorage jika tersedia
+        const dataFromSession = sessionStorage.getItem("dataPengguna");
+        if (dataFromSession) {
+          dataPengguna = JSON.parse(dataFromSession);
+        }
+
+        const user = dataPengguna[editIndex];
+
+        if (!user) return;
+
+        document.getElementById("nama").value = user.nama;
+        document.getElementById("email").value = user.email;
+        document.getElementById("role").value = user.role;
+        document.getElementById("password").value = user.password || "";
+      }
+
+      // Fungsi untuk menyimpan hasil edit
+      function updatePengguna(e) {
+        if (e) e.preventDefault();
+
+        const editIndex = sessionStorage.getItem("editIndex");
+        if (editIndex === null) return;
+
+        const nama = document.getElementById("nama")?.value;
+        const email = document.getElementById("email")?.value;
+        const role = document.getElementById("role")?.value;
+        const password = document.getElementById("password")?.value;
+
+        if (!nama || !email || !role) {
+          alert("Semua field harus diisi!");
+          return;
+        }
+
+        // Ambil data dari sessionStorage jika tersedia
+        const dataFromSession = sessionStorage.getItem("dataPengguna");
+        if (dataFromSession) {
+          dataPengguna = JSON.parse(dataFromSession);
+        }
+
+        // Update data pengguna
+        dataPengguna[editIndex] = {
+          ...dataPengguna[editIndex],
+          nama: nama,
+          email: email,
+          role: role,
+          password: password || "",
+        };
+
+        // Simpan kembali ke sessionStorage
+        sessionStorage.setItem("dataPengguna", JSON.stringify(dataPengguna));
+        sessionStorage.removeItem("editIndex");
+
+        alert("Data pengguna berhasil diperbarui!");
+        window.location.href = "index.html";
+      }
+
+      // Inisialisasi event listener saat halaman dimuat
+      document.addEventListener("DOMContentLoaded", function () {
+        // Cek apakah ada data di sessionStorage
+        const dataFromSession = sessionStorage.getItem("dataPengguna");
+        if (dataFromSession) {
+          dataPengguna = JSON.parse(dataFromSession);
+        } else {
+          // Jika tidak ada data, gunakan data sampel
+          dataPengguna = inisialisasiDataSampel();
+          // Simpan ke sessionStorage untuk navigasi antar halaman
+          sessionStorage.setItem("dataPengguna", JSON.stringify(dataPengguna));
+        }
+
+        // Filter dan pencarian di halaman index
+        document
+          .getElementById("filterRole")
+          ?.addEventListener("change", muatDataPengguna);
+        document
+          .getElementById("cari")
+          ?.addEventListener("input", muatDataPengguna);
+
+        // Form tambah pengguna
+        document
+          .getElementById("formTambahPengguna")
+          ?.addEventListener("submit", tambahPengguna);
+
+        // Form edit pengguna
+        document
+          .getElementById("formEditPengguna")
+          ?.addEventListener("submit", updatePengguna);
+
+        // Jika berada di halaman edit, load data untuk edit
+        if (window.location.href.includes("edit_user.html")) {
+          loadEditForm();
+        }
+
+        // Load data pengguna jika berada di halaman index
+        if (document.getElementById("daftarPengguna")) {
+          muatDataPengguna();
+        }
+      });
+    </script>
+  </body>
+</html>
